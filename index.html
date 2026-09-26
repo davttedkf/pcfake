@@ -9,7 +9,7 @@
 <meta property="og:description" content="Full 1080p gaming. $299.">
 <meta property="og:image" content="og-image.jpg">
 <meta name="theme-color" content="#1d1d1f">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231d1d1f'/%3E%3Ctext x='32' y='43' font-family='Arial,sans-serif' font-size='34' font-weight='700' fill='white' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
+<link rel="icon" type="image/png" href="logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -17,10 +17,11 @@
 /* =====================================================================
    IMAGE SETUP
    GitHub Pages: leave IMG_BASE = "" and keep images beside index.html.
-   Raw URLs instead: var IMG_BASE = "https://raw.githubusercontent.com/USER/REPO/main/";
+   IMPORTANT: filenames are case-sensitive on GitHub — pc-hero.jpg ≠ PC-hero.jpg
 
    Files:
-     pc-hero.jpg   required  — main 3/4 product shot
+     logo.png      brand icon — nav, footer, favicon, badge on 3rd gallery photo
+     pc-hero.jpg   required  — main product shot (older pc.jpg also accepted)
      pc-front.jpg  gallery 1 — straight-on front view
      pc-side.jpg   gallery 2 — glass side panel / internals
      pc-fan.jpg    gallery 3 — ARGB fan close-up
@@ -32,6 +33,10 @@ function applyBase(s){
   if (!s || /^(https?:|data:)/i.test(s)) return s;
   return IMG_BASE ? IMG_BASE.replace(/\/+$/, "/") + s.replace(/^\/+/, "") : s;
 }
+(function(){
+  var fav = document.querySelector('link[rel="icon"]');
+  if (fav) fav.href = applyBase(fav.getAttribute('href'));
+})();
 function imgOk(img){
   img.classList.add('loaded');
   var w = img.parentElement;
@@ -108,7 +113,10 @@ window.addEventListener('load', function(){
     background:rgba(255,255,255,.72);backdrop-filter:saturate(1.8) blur(18px);-webkit-backdrop-filter:saturate(1.8) blur(18px)}
   .nav-inner{max-width:1024px;margin:0 auto;height:100%;padding:0 22px;
     display:flex;align-items:center;gap:26px}
-  .brand{color:var(--ink);font-weight:800;font-size:17px;letter-spacing:-.02em}
+  .brand{color:var(--ink);font-weight:800;font-size:17px;letter-spacing:-.02em;
+    display:inline-flex;align-items:center;gap:9px}
+  .brand-logo{display:none;height:22px;width:auto;max-width:120px;object-fit:contain}
+  .brand-logo.ok{display:block}
   .topnav a:not(.brand){font-size:12px;color:var(--ink-2);transition:color .2s}
   .topnav a:not(.brand):hover{color:#000}
   .pill{border:none;cursor:pointer;background:var(--blue);color:#fff;font:500 14px 'Hanken Grotesk';
@@ -193,7 +201,7 @@ window.addEventListener('load', function(){
   .pc-shot{position:relative;display:inline-block;max-width:min(560px,92vw);min-height:120px;
     background:radial-gradient(60% 60% at 50% 45%, #f6f7f9, transparent)}
   .pc-shot img{width:100%;height:auto;display:block;opacity:0;transition:opacity .5s}
-  .pc-shot img.loaded{opacity:1;mix-blend-mode:multiply}
+  .pc-shot img.loaded{opacity:1}
   .so-stamp{display:none;position:absolute;left:16px;bottom:16px;background:#1d1d1f;color:#fff;
     font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
     padding:10px 18px;border-radius:8px;transform:rotate(-4deg);box-shadow:0 8px 24px rgba(0,0,0,.18)}
@@ -241,7 +249,7 @@ window.addEventListener('load', function(){
   .imgwrap.done::before{display:none}
   @keyframes shimmer{to{transform:translateX(100%)}}
   .shot img{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .5s;pointer-events:none}
-  .shot img.loaded{opacity:1;mix-blend-mode:multiply}
+  .shot img.loaded{opacity:1}
   .shot .ph{display:none;position:absolute;inset:0;flex-direction:column;align-items:center;justify-content:center;gap:10px;
     background:linear-gradient(160deg,#f2f3f6,#e6e8ed);color:var(--gray-lt)}
   .shot.noimg .imgwrap::before{display:none}
@@ -249,6 +257,12 @@ window.addEventListener('load', function(){
   .shot .ph svg{opacity:.65}
   .shot .ph b{font-size:12.5px;font-weight:600}
   .shot .ph small{font-size:11px;color:#a8adb5}
+  /* logo badge overlaid on the 3rd gallery photo */
+  .shot .wm{display:none;position:absolute;right:12px;bottom:12px;z-index:2;
+    background:rgba(255,255,255,.92);border-radius:9px;padding:7px 11px;
+    box-shadow:0 2px 10px rgba(0,0,0,.1)}
+  .shot .wm.ok{display:block}
+  .shot .wm img{height:18px;width:auto;max-width:110px;object-fit:contain;display:block;opacity:1}
   .shot figcaption{padding:14px 18px 16px;font-size:13px;color:var(--gray)}
 
   /* FPS-per-dollar chart */
@@ -385,7 +399,9 @@ window.addEventListener('load', function(){
   footer{background:var(--bg-gray);border-top:1px solid var(--line);padding:48px 22px 44px}
   .foot-inner{max-width:980px;margin:0 auto}
   .foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:32px;padding-bottom:36px}
-  .foot-brand{font-weight:800;font-size:15px;color:var(--ink);letter-spacing:-.02em;margin-bottom:10px}
+  .foot-brand{font-weight:800;font-size:15px;color:var(--ink);letter-spacing:-.02em;margin-bottom:10px;
+    display:flex;align-items:center;gap:9px}
+  .foot-brand .brand-logo{height:20px}
   .foot-tag{font-size:13px;color:var(--gray);line-height:1.6;max-width:260px}
   .foot-grid h4{font-size:12px;font-weight:700;color:var(--ink);margin-bottom:12px}
   .foot-grid a,.foot-grid button{display:block;background:none;border:none;padding:0;text-align:left;
@@ -411,7 +427,7 @@ window.addEventListener('load', function(){
   .buybar.show{transform:none}
   .bb-inner{max-width:980px;margin:0 auto;display:flex;align-items:center;gap:14px;padding:10px 22px}
   .bb-thumb{width:42px;height:42px;border-radius:10px;overflow:hidden;flex:none;background:var(--bg-gray)}
-  .bb-thumb img{width:100%;height:100%;object-fit:cover;display:block;mix-blend-mode:multiply}
+  .bb-thumb img{width:100%;height:100%;object-fit:cover;display:block}
   .bb-info{line-height:1.25}
   .bb-info strong{font-size:14px;display:block}
   .bb-info span{font-size:12px;color:var(--gray)}
@@ -443,7 +459,7 @@ window.addEventListener('load', function(){
   .m-sub{font-size:13px;color:var(--gray);margin-top:4px}
   .m-item{display:flex;gap:14px;align-items:center;background:var(--bg-gray);border-radius:16px;padding:16px;margin:20px 0}
   .m-thumb{width:56px;height:64px;flex:none;border-radius:8px;overflow:hidden;background:#fff}
-  .m-thumb img{width:100%;height:100%;object-fit:cover;display:block;mix-blend-mode:multiply}
+  .m-thumb img{width:100%;height:100%;object-fit:cover;display:block}
   .m-info{display:flex;flex-direction:column;gap:2px;min-width:0}
   .m-info strong{font-size:15px}
   .m-info span{font-size:12px;color:var(--gray)}
@@ -530,7 +546,11 @@ window.addEventListener('load', function(){
 
 <nav class="topnav">
   <div class="nav-inner">
-    <a class="brand" href="#top">Titan Systems</a>
+    <a class="brand" href="#top">
+      <img class="brand-logo" data-src="logo.png" alt="" data-fb="logo.jpeg|logo.jpg"
+           onload="this.classList.add('ok')" onerror="imgFail(this)">
+      Titan Systems
+    </a>
     <a href="#overview">Overview</a>
     <a href="#graphics">Graphics</a>
     <a href="#design">Design</a>
@@ -625,7 +645,7 @@ window.addEventListener('load', function(){
       <div class="pc-shot">
         <img id="heroImg" data-src="pc-hero.jpg" width="640" height="480" loading="eager" decoding="async"
              alt="Titan Systems FX-300 in Ceramic White with three ARGB fans behind a mesh front and a tempered-glass side panel"
-             data-fb="pc-hero.png|pc-hero.jpeg|pc-hero.webp"
+             data-fb="pc-hero.png|pc-hero.jpeg|pc-hero.webp|pc.jpg"
              onload="imgOk(this)" onerror="imgFail(this)">
         <span class="so-stamp">Sold Out</span>
         <svg class="pc-fb" viewBox="0 0 360 460" role="img" aria-label="Titan Systems FX-300 render">
@@ -741,6 +761,12 @@ window.addEventListener('load', function(){
       <div class="imgwrap">
         <img data-src="pc-fan.jpg" alt="FX-300 ARGB cooling fan" data-fb="pc-fan.png|pc-fan.jpeg|pc-fan.webp"
              loading="lazy" decoding="async" onload="imgOk(this)" onerror="imgFail(this)">
+        <span class="wm" aria-hidden="true">
+          <img data-src="logo.png" alt="" data-fb="logo.jpeg|logo.jpg"
+               loading="lazy" decoding="async"
+               onload="this.classList.add('loaded');this.parentElement.classList.add('ok')"
+               onerror="imgFail(this)">
+        </span>
         <div class="ph" aria-hidden="true">
           <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.5"/><path d="M12 3a4.2 4.2 0 0 1 0 8M21 12a4.2 4.2 0 0 1-8 0M12 21a4.2 4.2 0 0 1 0-8M3 12a4.2 4.2 0 0 1 8 0"/></svg>
           <b>Image coming soon</b><small>pc-fan.jpg</small>
@@ -1059,7 +1085,11 @@ window.addEventListener('load', function(){
   <div class="foot-inner">
     <div class="foot-grid">
       <div>
-        <div class="foot-brand">Titan Systems</div>
+        <div class="foot-brand">
+          <img class="brand-logo" data-src="logo.png" alt="" data-fb="logo.jpeg|logo.jpg"
+               loading="lazy" decoding="async" onload="this.classList.add('ok')" onerror="imgFail(this)">
+          Titan Systems
+        </div>
         <p class="foot-tag">Full-size gaming performance, priced for everyone. Designed, assembled, and supported in-house.</p>
       </div>
       <div>
@@ -1206,34 +1236,74 @@ window.addEventListener('load', function(){
   const $ = id => document.getElementById(id);
 
   /* ============================================================
-     EASY EDIT — the only things you need to touch
+     EASY EDIT — the only thing you need to touch
      ============================================================ */
   /* Your real inbox. Notify signups and order receipts are delivered
      here via FormSubmit (free, no account).
-     NOTE: the FIRST submission triggers a one-time activation email
-     from FormSubmit — click the link in it once, and delivery is live
-     from then on. */
-  const NOTIFY_EMAIL = "you@example.com";
 
-  /* Launch moment — December 24, 1:00 PM Eastern Time.
-     The next upcoming occurrence is used automatically. */
-  const LAUNCH = { month: 12, day: 24, hour: 13, minute: 0, tz: 'America/New_York' };
+     FIRST-TIME SETUP (required, one time only):
+       1. Replace the address below with YOUR email.
+       2. Open the site and submit the Notify form once.
+       3. FormSubmit emails you an ACTIVATION link — click it.
+       4. Done. From then on, every signup and order arrives in your
+          inbox, and visitors get their confirmation emails.
+     Until you click the activation link, no email can be delivered
+     (this is FormSubmit's anti-spam requirement). Also check spam. */
+  const NOTIFY_EMAIL = "you@example.com";   /* ← PUT YOUR EMAIL HERE */
   /* ============================================================ */
 
-  /* ---------- Real email delivery (FormSubmit AJAX) ---------- */
-  function postEmail(payload){
+  const EMAIL_SET = NOTIFY_EMAIL && !/example\.com$/i.test(NOTIFY_EMAIL.trim());
+  if (!EMAIL_SET){
+    console.warn('[Titan Systems] Email delivery is not configured. Set NOTIFY_EMAIL at the top of the script to your real address, then submit the Notify form once and click the activation email FormSubmit sends you.');
+  }
+
+  /* ---------- Real email delivery (FormSubmit) ----------
+     Primary: AJAX endpoint. Fallback: hidden-form POST (works even if
+     fetch is blocked by extensions/network filters). */
+  function postEmailAjax(payload){
     const ctrl = new AbortController();
     const t = setTimeout(() => ctrl.abort(), 6000);
-    return fetch('https://formsubmit.co/ajax/' + encodeURIComponent(NOTIFY_EMAIL), {
+    return fetch('https://formsubmit.co/ajax/' + encodeURIComponent(NOTIFY_EMAIL.trim()), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify(Object.assign({ _captcha: 'false', _template: 'table' }, payload)),
       signal: ctrl.signal
     }).then(r => {
       clearTimeout(t);
-      if (!r.ok) throw new Error('email send failed');
+      if (!r.ok) throw new Error('send failed');
       return r.json();
     });
+  }
+  let fsFrame = null;
+  function postEmailForm(payload){
+    return new Promise(resolve => {
+      if (!fsFrame){
+        fsFrame = document.createElement('iframe');
+        fsFrame.name = 'fsFallback';
+        fsFrame.style.display = 'none';
+        document.body.appendChild(fsFrame);
+      }
+      const form = document.createElement('form');
+      form.action = 'https://formsubmit.co/' + encodeURIComponent(NOTIFY_EMAIL.trim());
+      form.method = 'POST';
+      form.target = 'fsFallback';
+      Object.entries(payload).forEach(([k, v]) => {
+        const i = document.createElement('input');
+        i.type = 'hidden'; i.name = k; i.value = v;
+        form.appendChild(i);
+      });
+      document.body.appendChild(form);
+      form.submit();
+      setTimeout(() => { form.remove(); resolve(); }, 1500);
+    });
+  }
+  async function postEmail(payload){
+    if (!EMAIL_SET) throw new Error('email-not-configured');
+    try{
+      return await postEmailAjax(payload);
+    }catch(err){
+      return await postEmailForm(payload);
+    }
   }
 
   /* ---------- Toast ---------- */
@@ -1243,7 +1313,7 @@ window.addEventListener('load', function(){
     toast.textContent = msg;
     toast.classList.add('show');
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toast.classList.remove('show'), 3800);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 4200);
   }
 
   const SUPPORT_EMAIL = 'support@titansystems.com';
@@ -1268,8 +1338,7 @@ window.addEventListener('load', function(){
   })();
 
   /* =========================================================
-     LAUNCH DATE — fixed wall-clock moment in a named timezone.
-     Builds "next Dec 24, 1:00 PM ET" no matter when it's opened.
+     LAUNCH DATE — Dec 24, 1:00 PM Eastern Time (next occurrence)
      ========================================================= */
   function zonedTime(y, mo, d, h, mi, tz){
     let utc = Date.UTC(y, mo - 1, d, h, mi);
@@ -1288,9 +1357,9 @@ window.addEventListener('load', function(){
   }
   (function buildLaunch(){
     const now = new Date();
-    let d = zonedTime(now.getFullYear(), LAUNCH.month, LAUNCH.day, LAUNCH.hour, LAUNCH.minute, LAUNCH.tz);
+    let d = zonedTime(now.getFullYear(), 12, 24, 13, 0, 'America/New_York');
     if (d.getTime() <= now.getTime())
-      d = zonedTime(now.getFullYear() + 1, LAUNCH.month, LAUNCH.day, LAUNCH.hour, LAUNCH.minute, LAUNCH.tz);
+      d = zonedTime(now.getFullYear() + 1, 12, 24, 13, 0, 'America/New_York');
     window.launchDate = d;
   })();
   const launchDate = window.launchDate;
@@ -1746,6 +1815,10 @@ window.addEventListener('load', function(){
       em.focus();
       return;
     }
+    if (!EMAIL_SET){
+      showToast("Email delivery isn't set up yet — replace NOTIFY_EMAIL at the top of this file's script with your address.");
+      return;
+    }
     const btn = $('nSubmit');
     btn.classList.add('loading');
     try{
@@ -1767,6 +1840,7 @@ window.addEventListener('load', function(){
       closeNotify();
       showToast("You're on the list — a confirmation email has been sent.");
     }catch(err){
+      console.error('[Titan Systems] Notify email failed:', err);
       showToast("We couldn't reach the list just now. Please try again in a moment.");
     }finally{
       btn.classList.remove('loading');
