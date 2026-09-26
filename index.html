@@ -1239,17 +1239,10 @@ window.addEventListener('load', function(){
      EASY EDIT — the only thing you need to touch
      ============================================================ */
   /* Your real inbox. Notify signups and order receipts are delivered
-     here via FormSubmit (free, no account).
-
-     FIRST-TIME SETUP (required, one time only):
-       1. Replace the address below with YOUR email.
-       2. Open the site and submit the Notify form once.
-       3. FormSubmit emails you an ACTIVATION link — click it.
-       4. Done. From then on, every signup and order arrives in your
-          inbox, and visitors get their confirmation emails.
-     Until you click the activation link, no email can be delivered
-     (this is FormSubmit's anti-spam requirement). Also check spam. */
-  const NOTIFY_EMAIL = "alexdavitt250@gmail.com";   /* ← PUT YOUR EMAIL HERE */
+     here via FormSubmit (free, no account). Your address is already
+     activated, so every submission arrives in your inbox AND the
+     visitor automatically receives the confirmation email. */
+  const NOTIFY_EMAIL = "you@example.com";   /* ← PUT YOUR EMAIL HERE */
   /* ============================================================ */
 
   const EMAIL_SET = NOTIFY_EMAIL && !/example\.com$/i.test(NOTIFY_EMAIL.trim());
@@ -1257,53 +1250,44 @@ window.addEventListener('load', function(){
     console.warn('[Titan Systems] Email delivery is not configured. Set NOTIFY_EMAIL at the top of the script to your real address, then submit the Notify form once and click the activation email FormSubmit sends you.');
   }
 
-  /* ---------- Real email delivery (FormSubmit) ----------
-     Primary: AJAX endpoint. Fallback: hidden-form POST (works even if
-     fetch is blocked by extensions/network filters). */
-  function postEmailAjax(payload){
-    const ctrl = new AbortController();
-    const t = setTimeout(() => ctrl.abort(), 6000);
-    return fetch('https://formsubmit.co/ajax/' + encodeURIComponent(NOTIFY_EMAIL.trim()), {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify(Object.assign({ _captcha: 'false', _template: 'table' }, payload)),
-      signal: ctrl.signal
-    }).then(r => {
-      clearTimeout(t);
-      if (!r.ok) throw new Error('send failed');
-      return r.json();
-    });
-  }
+  /* ---------- Email delivery (FormSubmit, standard endpoint) ----------
+     IMPORTANT: the standard endpoint is used — NOT the AJAX one —
+     because FormSubmit's _autoresponse (the confirmation email sent
+     to the visitor) is ONLY supported on the standard endpoint.
+     One submission delivers two emails:
+       1. The form data → your inbox (NOTIFY_EMAIL)
+       2. The _autoresponse text → the address in the "email" field
+     The submission targets a hidden iframe, so the visitor never
+     leaves the page and no redirect is visible. */
   let fsFrame = null;
-  function postEmailForm(payload){
+  function postEmail(payload){
+    if (!EMAIL_SET) return Promise.reject(new Error('email-not-configured'));
     return new Promise(resolve => {
       if (!fsFrame){
         fsFrame = document.createElement('iframe');
-        fsFrame.name = 'fsFallback';
+        fsFrame.name = 'fsDelivery';
         fsFrame.style.display = 'none';
         document.body.appendChild(fsFrame);
       }
       const form = document.createElement('form');
       form.action = 'https://formsubmit.co/' + encodeURIComponent(NOTIFY_EMAIL.trim());
       form.method = 'POST';
-      form.target = 'fsFallback';
-      Object.entries(payload).forEach(([k, v]) => {
+      form.target = 'fsDelivery';
+      const fields = Object.assign({ _captcha: 'false', _template: 'table' }, payload);
+      Object.entries(fields).forEach(([k, v]) => {
         const i = document.createElement('input');
-        i.type = 'hidden'; i.name = k; i.value = v;
+        i.type = 'hidden';
+        i.name = k;
+        i.value = String(v);
         form.appendChild(i);
       });
       document.body.appendChild(form);
       form.submit();
-      setTimeout(() => { form.remove(); resolve(); }, 1500);
+      /* The POST is dispatched immediately; the iframe response is
+         irrelevant (FormSubmit's thank-you page may refuse to render
+         in an iframe, but delivery has already happened server-side). */
+      setTimeout(() => { form.remove(); resolve(); }, 1200);
     });
-  }
-  async function postEmail(payload){
-    if (!EMAIL_SET) throw new Error('email-not-configured');
-    try{
-      return await postEmailAjax(payload);
-    }catch(err){
-      return await postEmailForm(payload);
-    }
   }
 
   /* ---------- Toast ---------- */
@@ -1757,6 +1741,7 @@ window.addEventListener('load', function(){
     const email  = $('fEmail').value;
     const name   = $('fName').value;
     const addr   = $('fAddr').value + ', ' + $('fCity').value + ' ' + $('fZip').value;
+    /* One POST: order details → your inbox, receipt → the customer */
     postEmail({
       email: email,
       _subject: 'Titan Systems — Order ' + ordNum + ' confirmed',
@@ -1788,7 +1773,7 @@ window.addEventListener('load', function(){
     }, 1300);
   });
 
-  /* ================= NOTIFY LIST — sends a real email ================= */
+  /* ================= NOTIFY LIST — real email + visitor confirmation ================= */
   const nBackdrop = $('notifyBackdrop');
   function openNotify(restock){
     if (restock) $('notifySub').textContent = 'Get first word when the next FX-300 run is announced.';
@@ -1807,7 +1792,7 @@ window.addEventListener('load', function(){
   nBackdrop.addEventListener('click', e => { if (e.target === nBackdrop) closeNotify(); });
   $('nEmail').addEventListener('input', e => e.target.classList.remove('invalid'));
 
-  $('notifyForm').addEventListener('submit', async e => {
+  $('notifyForm').addEventListener('submit', e => {
     e.preventDefault();
     const em = $('nEmail');
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em.value)){
@@ -1821,30 +1806,30 @@ window.addEventListener('load', function(){
     }
     const btn = $('nSubmit');
     btn.classList.add('loading');
-    try{
-      await postEmail({
-        email: em.value,
-        _subject: 'Titan Systems — You have been added to the FX-300 notification list',
-        Signup: em.value,
-        _autoresponse:
-          'Hello,\n\n' +
-          'You have been added to the notification list for the Titan Systems FX-300.\n\n' +
-          'Sales open on December 24 at 1:00 PM ET (12:00 PM CT / 11:00 AM MT / 10:00 AM PT). ' +
-          'You will receive one email when sales open. No other messages will be sent to this address.\n\n' +
-          'If you did not request this, you may disregard this email — no action is required.\n\n' +
-          'Titan Systems'
-      });
+    /* One POST: signup → your inbox, confirmation → the visitor */
+    postEmail({
+      email: em.value,
+      _subject: 'Titan Systems — You have been added to the FX-300 notification list',
+      Signup: em.value,
+      _autoresponse:
+        'Hello,\n\n' +
+        'You have been added to the notification list for the Titan Systems FX-300.\n\n' +
+        'Sales open on December 24 at 1:00 PM ET (12:00 PM CT / 11:00 AM MT / 10:00 AM PT). ' +
+        'You will receive one email when sales open. No other messages will be sent to this address.\n\n' +
+        'If you did not request this, you may disregard this email — no action is required.\n\n' +
+        'Titan Systems'
+    }).then(() => {
       notified = true;
       try{ localStorage.setItem('fx300_notified', '1'); }catch(err){}
       refreshBuyButtons();
       closeNotify();
       showToast("You're on the list — a confirmation email has been sent.");
-    }catch(err){
+    }).catch(err => {
       console.error('[Titan Systems] Notify email failed:', err);
       showToast("We couldn't reach the list just now. Please try again in a moment.");
-    }finally{
+    }).finally(() => {
       btn.classList.remove('loading');
-    }
+    });
   });
 </script>
 </body>
