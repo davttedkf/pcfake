@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FX-300 — Ceramic White — The $299 Gaming Desktop</title>
-<meta name="description" content="FX-300. Ryzen 5 5500, GTX 1660 Super, 16GB RAM, 512GB NVMe. Full 1080p gaming for $299.">
-<meta property="og:title" content="FX-300 — The $299 Gaming Desktop">
+<title>Titan Systems — FX-300 — The $299 Gaming Desktop</title>
+<meta name="description" content="FX-300 by Titan Systems. Ryzen 5 5500, GTX 1660 Super, 16GB RAM, 512GB NVMe. Full 1080p gaming for $299.">
+<meta property="og:title" content="Titan Systems — FX-300 — The $299 Gaming Desktop">
 <meta property="og:description" content="Full 1080p gaming. $299.">
 <meta property="og:image" content="og-image.jpg">
 <meta name="theme-color" content="#1d1d1f">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231d1d1f'/%3E%3Ctext x='32' y='43' font-family='Arial,sans-serif' font-size='34' font-weight='700' fill='white' text-anchor='middle'%3EF%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231d1d1f'/%3E%3Ctext x='32' y='43' font-family='Arial,sans-serif' font-size='34' font-weight='700' fill='white' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -23,7 +23,7 @@
      pc-hero.jpg   required  — main 3/4 product shot
      pc-front.jpg  gallery 1 — straight-on front view
      pc-side.jpg   gallery 2 — glass side panel / internals
-     pc-fan.jpg    gallery 3 + Lighting section — ARGB fan close-up
+     pc-fan.jpg    gallery 3 — ARGB fan close-up
      pc-desk.jpg   optional  — lifestyle banner (hides if missing)
      og-image.jpg  optional  — 1200×630 link preview
    ===================================================================== */
@@ -46,16 +46,10 @@ function imgFail(img){
   }
   img.classList.add('broken');
   var fig = img.closest('.shot');
-  if (fig){ fig.classList.add('noimg'); fig.removeAttribute('tabindex'); fig.removeAttribute('role'); checkGallery(); return; }
+  if (fig){ fig.classList.add('noimg'); checkGallery(); return; }
   if (img.id === 'heroImg'){
     var st = document.getElementById('pcStage');
     if (st) st.classList.add('no-img');
-    return;
-  }
-  if (img.id === 'fanImg'){
-    var fr = document.getElementById('fanFrame'), ph = document.getElementById('fanPh');
-    if (fr) fr.style.display = 'none';
-    if (ph) ph.hidden = false;
     return;
   }
   if (img.closest('.banner-sec')){ img.closest('.banner-sec').style.display = 'none'; return; }
@@ -163,19 +157,9 @@ window.addEventListener('load', function(){
   @keyframes tpop{30%{transform:scale(1.07)}}
   .cu span{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gray-lt)}
   .csep{font-size:clamp(28px,5vw,44px);font-weight:300;color:#c7c7cc;line-height:1.3}
-  .cal-btn{margin-top:16px;background:none;border:none;cursor:pointer;color:var(--blue);font:500 13px 'Hanken Grotesk'}
-  .cal-btn:hover{text-decoration:underline}
-
-  /* First-run reservation */
-  .reserve{max-width:420px;margin:26px auto 0;text-align:left}
-  .r-head{display:flex;justify-content:space-between;font-size:12.5px;font-weight:600;color:var(--ink-2);margin-bottom:7px}
-  .r-head b{font-variant-numeric:tabular-nums}
-  .r-track{height:5px;background:#e8e8ed;border-radius:999px;overflow:hidden}
-  .r-track i{display:block;height:100%;width:0;background:linear-gradient(90deg,#0071e3,#2997ff);
-    border-radius:999px;transition:width 1.2s cubic-bezier(.22,1,.36,1)}
-  .r-note{margin-top:7px;font-size:11.5px;color:var(--gray-lt)}
-  body.phase-soldout .r-track i{background:#86868b}
-  body.phase-onsale .reserve{display:none}
+  .tz-line{margin-top:18px;font-size:13px;color:var(--ink-2);font-weight:600}
+  .tz-line b{color:var(--ink)}
+  .tz-sub{margin-top:5px;font-size:12.5px;color:var(--gray-lt)}
 
   .soldout-block{margin-top:30px}
   .so-badge{display:inline-block;background:#1d1d1f;color:#fff;font-size:13px;font-weight:700;
@@ -245,23 +229,19 @@ window.addEventListener('load', function(){
   .fcard h4{font-size:17px;font-weight:700;letter-spacing:-.01em;margin-bottom:6px}
   .fcard p{font-size:14px;color:var(--ink-2);line-height:1.55}
 
-  /* ---------- Design gallery (3 slots) ---------- */
+  /* ---------- Design gallery (3 images, static) ---------- */
   .gallery{max-width:980px;margin:64px auto 0;display:grid;grid-template-columns:repeat(3,1fr);gap:18px;text-align:left}
-  .shot{margin:0;background:var(--bg-gray);border-radius:22px;overflow:hidden;cursor:zoom-in;
+  .shot{margin:0;background:var(--bg-gray);border-radius:22px;overflow:hidden;
     transition:transform .3s cubic-bezier(.22,1,.36,1),box-shadow .3s}
   .shot:hover{transform:translateY(-4px);box-shadow:0 14px 40px rgba(0,0,0,.08)}
-  .shot:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
-  .shot.noimg{cursor:default}
-  .shot.noimg:hover{transform:none;box-shadow:none}
   .imgwrap{position:relative;aspect-ratio:4/3.1;overflow:hidden}
   .imgwrap::before{content:'';position:absolute;inset:0;
     background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.7) 50%,transparent 70%);
     transform:translateX(-100%);animation:shimmer 1.4s infinite}
   .imgwrap.done::before{display:none}
   @keyframes shimmer{to{transform:translateX(100%)}}
-  .shot img{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .5s,transform .6s cubic-bezier(.22,1,.36,1)}
+  .shot img{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .5s;pointer-events:none}
   .shot img.loaded{opacity:1;mix-blend-mode:multiply}
-  .shot:hover img.loaded{transform:scale(1.035)}
   .shot .ph{display:none;position:absolute;inset:0;flex-direction:column;align-items:center;justify-content:center;gap:10px;
     background:linear-gradient(160deg,#f2f3f6,#e6e8ed);color:var(--gray-lt)}
   .shot.noimg .imgwrap::before{display:none}
@@ -308,40 +288,6 @@ window.addEventListener('load', function(){
   .cmp b{color:#f5f5f7;font-variant-numeric:tabular-nums}
   .cdot{width:8px;height:8px;border-radius:50%;display:inline-block}
   .fps-fn{margin-top:22px;font-size:12px;color:var(--gray-lt)}
-
-  /* ---------- Lighting — ambient glow (photo stays natural) ---------- */
-  .lchips{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:44px}
-  .lchip{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:#fff;border-radius:999px;
-    padding:9px 18px;font:500 13px 'Hanken Grotesk';color:var(--ink-2);cursor:pointer;transition:all .2s}
-  .lchip:hover{border-color:#b9bdc4;color:var(--ink)}
-  .lchip.on{background:#1d1d1f;border-color:#1d1d1f;color:#fff;font-weight:600}
-  .ldot{width:14px;height:14px;border-radius:50%;flex:none;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
-  .ldot.rainbow{background:conic-gradient(#f87171,#fbbf24,#34d399,#22d3ee,#818cf8,#e879f9,#f87171)}
-  .ldot.wave{background:linear-gradient(120deg,#22d3ee,#6366f1)}
-  .ldot.pulse{background:#a78bfa}
-  .ldot.ice{background:#7dd3fc}
-  .ldot.off{background:#e5e7eb}
-  .fan-stage{position:relative;margin:52px auto 0;width:min(420px,80vw)}
-  .fan-glow{position:absolute;inset:-14%;z-index:0;border-radius:50%;filter:blur(52px);
-    opacity:.55;pointer-events:none;transition:opacity .6s,background .6s}
-  body.light-rainbow .fan-glow{background:conic-gradient(#f87171,#fbbf24,#34d399,#22d3ee,#818cf8,#e879f9,#f87171);
-    animation:glowSpin 9s linear infinite}
-  body.light-wave .fan-glow{background:linear-gradient(120deg,#22d3ee,#6366f1,#22d3ee);
-    background-size:200% 200%;animation:glowShift 6s ease-in-out infinite alternate}
-  body.light-pulse .fan-glow{background:#a78bfa;animation:breatheGlow 1.9s ease-in-out infinite}
-  body.light-ice .fan-glow{background:#38bdf8;opacity:.5}
-  body.light-off .fan-glow{background:#d7d9de;opacity:.18}
-  @keyframes glowSpin{to{transform:rotate(360deg)}}
-  @keyframes glowShift{to{background-position:100% 100%}}
-  @keyframes breatheGlow{50%{opacity:.22}}
-  .fan-frame{position:relative;z-index:1;border-radius:28px;overflow:hidden;background:#fff;
-    box-shadow:0 24px 60px -18px rgba(30,30,40,.28)}
-  .fan-frame img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block}
-  .fan-ph{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
-    aspect-ratio:1/1;border-radius:28px;background:linear-gradient(160deg,#f2f3f6,#e6e8ed);color:var(--gray-lt)}
-  .fan-ph svg{opacity:.65}
-  .fan-ph b{font-size:12.5px}.fan-ph small{font-size:11px;color:#a8adb5}
-  .fan-cap{margin-top:24px;font-size:13px;color:var(--gray-lt)}
 
   /* ---------- Lifestyle banner ---------- */
   .banner-sec{position:relative;min-height:480px;display:flex;align-items:center;justify-content:center;
@@ -543,24 +489,6 @@ window.addEventListener('load', function(){
   .m-done-line{font-size:15px;margin-top:6px}
   .m-done-sub{font-size:13px;color:var(--gray);line-height:1.55;margin:14px 0 20px}
 
-  /* ---------- Lightbox ---------- */
-  .lightbox{position:fixed;inset:0;z-index:110;background:rgba(20,20,22,.92);
-    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
-    display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;
-    opacity:0;transition:opacity .25s;padding:56px 24px}
-  .lightbox.show{opacity:1}
-  .lightbox[hidden]{display:none}
-  .lightbox img{max-width:min(880px,92vw);max-height:72vh;border-radius:18px;
-    box-shadow:0 30px 80px rgba(0,0,0,.5);background:#fff}
-  .lb-cap{color:#d6d6db;font-size:14px;text-align:center;max-width:560px}
-  .lb-x{position:absolute;top:18px;right:18px;width:36px;height:36px;border-radius:50%;
-    background:rgba(255,255,255,.12);border:none;color:#fff;cursor:pointer;display:grid;place-items:center}
-  .lb-x:hover{background:rgba(255,255,255,.22)}
-  .lb-nav{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;
-    background:rgba(255,255,255,.12);border:none;color:#fff;cursor:pointer;display:grid;place-items:center}
-  .lb-nav:hover{background:rgba(255,255,255,.22)}
-  .lb-prev{left:18px}.lb-next{right:18px}
-
   .reveal{opacity:0;transform:translateY(26px);transition:opacity .9s cubic-bezier(.22,1,.36,1),transform .9s cubic-bezier(.22,1,.36,1);transition-delay:var(--d,0s)}
   .reveal.in{opacity:1;transform:none}
 
@@ -592,7 +520,7 @@ window.addEventListener('load', function(){
   }
 </style>
 </head>
-<body id="top" class="phase-soon light-rainbow">
+<body id="top" class="phase-soon">
 
 <div class="progress" id="progress" aria-hidden="true"></div>
 
@@ -602,7 +530,7 @@ window.addEventListener('load', function(){
 
 <nav class="topnav">
   <div class="nav-inner">
-    <a class="brand" href="#top">Frugal</a>
+    <a class="brand" href="#top">Titan Systems</a>
     <a href="#overview">Overview</a>
     <a href="#graphics">Graphics</a>
     <a href="#design">Design</a>
@@ -628,7 +556,6 @@ window.addEventListener('load', function(){
   <a href="#design">Design</a>
   <a href="#performance">Performance</a>
   <a href="#graphics">Graphics</a>
-  <a href="#lighting">Lighting</a>
   <a href="#price">Price</a>
   <a href="#compare">Compare</a>
   <a href="#specs">Tech Specs</a>
@@ -644,7 +571,6 @@ window.addEventListener('load', function(){
       <a href="#design">Design</a>
       <a href="#performance">Performance</a>
       <a href="#graphics">Graphics</a>
-      <a href="#lighting">Lighting</a>
       <a href="#price">Price</a>
       <a href="#reviews">Reviews</a>
       <a href="#compare">Compare</a>
@@ -672,12 +598,8 @@ window.addEventListener('load', function(){
       <div class="csep" aria-hidden="true">:</div>
       <div class="cu"><b id="cdS">--</b><span>Seconds</span></div>
     </div>
-    <div class="reserve">
-      <div class="r-head"><span>First run · 500 units</span><b id="rPct">4%</b></div>
-      <div class="r-track"><i id="rBar"></i></div>
-      <p class="r-note">Units are fulfilled in order of reservation.</p>
-    </div>
-    <button class="cal-btn" id="calBtn">Add to calendar ↓</button>
+    <p class="tz-line" id="tzLine"></p>
+    <p class="tz-sub" id="tzSub"></p>
   </div>
 
   <div class="soldout-block">
@@ -702,11 +624,11 @@ window.addEventListener('load', function(){
     <div class="pc-tilt" id="pcTilt">
       <div class="pc-shot">
         <img id="heroImg" data-src="pc-hero.jpg" width="640" height="480" loading="eager" decoding="async"
-             alt="Frugal FX-300 in Ceramic White with three ARGB fans behind a mesh front and a tempered-glass side panel"
+             alt="Titan Systems FX-300 in Ceramic White with three ARGB fans behind a mesh front and a tempered-glass side panel"
              data-fb="pc-hero.png|pc-hero.jpeg|pc-hero.webp"
              onload="imgOk(this)" onerror="imgFail(this)">
         <span class="so-stamp">Sold Out</span>
-        <svg class="pc-fb" viewBox="0 0 360 460" role="img" aria-label="Frugal FX-300 render">
+        <svg class="pc-fb" viewBox="0 0 360 460" role="img" aria-label="Titan Systems FX-300 render">
           <defs>
             <linearGradient id="caseG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fdfdfe"/><stop offset="1" stop-color="#eef0f4"/></linearGradient>
             <linearGradient id="rgbGradA" x1="0" y1="0" x2="1" y2="1">
@@ -732,6 +654,7 @@ window.addEventListener('load', function(){
           <g transform="translate(180,219)"><circle r="46" fill="url(#fanGlow)" opacity=".9" class="hue"/><circle r="40" fill="none" stroke="url(#rgbGradA)" stroke-width="5" class="hue"/></g>
           <g transform="translate(180,346)"><circle r="46" fill="url(#fanGlow)" opacity=".9" class="hue"/><circle r="40" fill="none" stroke="url(#rgbGradA)" stroke-width="5" class="hue"/></g>
           <circle cx="312" cy="38" r="6" fill="#e4e7ec" stroke="#cfd4db" stroke-width="1.5"/>
+          <text x="180" y="450" text-anchor="middle" style="font:600 11px 'Hanken Grotesk'" fill="#8b8f98" letter-spacing=".5em">TITAN</text>
         </svg>
       </div>
     </div>
@@ -776,7 +699,7 @@ window.addEventListener('load', function(){
     <div class="fcard reveal" style="--d:.34s">
       <div class="fico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3.4M12 18.1v3.4M2.5 12h3.4M18.1 12h3.4M5.3 5.3l2.4 2.4M16.3 16.3l2.4 2.4M18.7 5.3l-2.4 2.4M7.7 16.3l-2.4 2.4"/></svg></div>
       <h4>ARGB, included</h4>
-      <p>Four 120mm ARGB fans and lit memory, standard. Five lighting modes from a button on the case — no software.</p>
+      <p>Four 120mm ARGB fans and lit memory, standard on every unit, controlled from the case.</p>
     </div>
     <div class="fcard reveal" style="--d:.4s">
       <div class="fico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M8.5 10.5l2 2 4-4.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
@@ -790,9 +713,9 @@ window.addEventListener('load', function(){
 <section id="design" class="section" style="padding-top:60px">
   <p class="eyebrow reveal">Design</p>
   <h2 class="section-h reveal" style="--d:.06s">Ceramic White.<br>Built to be seen.</h2>
-  <p class="section-p reveal" style="--d:.12s">A high-airflow mesh front, a tempered-glass side panel, and addressable RGB lighting — standard on every unit. Select any photo to enlarge.</p>
+  <p class="section-p reveal" style="--d:.12s">A high-airflow mesh front, a tempered-glass side panel, and addressable RGB lighting — standard on every unit.</p>
   <div class="gallery reveal" style="--d:.18s" id="gallery">
-    <figure class="shot" tabindex="0" role="button" aria-label="Enlarge photo: front intake array">
+    <figure class="shot">
       <div class="imgwrap">
         <img data-src="pc-front.jpg" alt="FX-300 front intake array" data-fb="pc-front.png|pc-front.jpeg|pc-front.webp"
              loading="lazy" decoding="async" onload="imgOk(this)" onerror="imgFail(this)">
@@ -803,7 +726,7 @@ window.addEventListener('load', function(){
       </div>
       <figcaption>High-airflow mesh front with three ARGB intakes.</figcaption>
     </figure>
-    <figure class="shot" tabindex="0" role="button" aria-label="Enlarge photo: tempered-glass side panel">
+    <figure class="shot">
       <div class="imgwrap">
         <img data-src="pc-side.jpg" alt="FX-300 tempered-glass side panel" data-fb="pc-side.png|pc-side.jpeg|pc-side.webp"
              loading="lazy" decoding="async" onload="imgOk(this)" onerror="imgFail(this)">
@@ -814,7 +737,7 @@ window.addEventListener('load', function(){
       </div>
       <figcaption>Tempered glass. Cable-managed internals.</figcaption>
     </figure>
-    <figure class="shot" tabindex="0" role="button" aria-label="Enlarge photo: ARGB fan">
+    <figure class="shot">
       <div class="imgwrap">
         <img data-src="pc-fan.jpg" alt="FX-300 ARGB cooling fan" data-fb="pc-fan.png|pc-fan.jpeg|pc-fan.webp"
              loading="lazy" decoding="async" onload="imgOk(this)" onerror="imgFail(this)">
@@ -871,35 +794,6 @@ window.addEventListener('load', function(){
       <span class="cmp"><i class="cdot" style="background:#c7c7cc" aria-hidden="true"></i>$1,299 prebuilt <b id="cmpPre">85</b> FPS</span>
     </div>
     <p class="fps-fn">All figures measured at 1080p on the same test bench. Results may vary with drivers and system configuration.</p>
-  </div>
-</section>
-
-<!-- ============ LIGHTING — ambient glow ============ -->
-<section id="lighting" class="section">
-  <p class="eyebrow reveal">Cooling &amp; Lighting</p>
-  <h2 class="section-h reveal" style="--d:.06s">Five modes.<br>One button.</h2>
-  <p class="section-p reveal" style="--d:.12s">Three 120mm ARGB intakes draw cool air across the components; a rear exhaust and a 120mm ARGB CPU cooler carry heat out — at around 31 dB idle.<sup class="fn"><a href="#footnotes">4</a></sup> The LED button on top of the case cycles the modes. Preview them here:</p>
-
-  <div class="lchips reveal" style="--d:.16s" role="group" aria-label="Lighting mode">
-    <button class="lchip" data-mode="rainbow"><span class="ldot rainbow" aria-hidden="true"></span>Rainbow</button>
-    <button class="lchip" data-mode="wave"><span class="ldot wave" aria-hidden="true"></span>Aurora</button>
-    <button class="lchip" data-mode="pulse"><span class="ldot pulse" aria-hidden="true"></span>Pulse</button>
-    <button class="lchip" data-mode="ice"><span class="ldot ice" aria-hidden="true"></span>Ice</button>
-    <button class="lchip" data-mode="off"><span class="ldot off" aria-hidden="true"></span>Off</button>
-  </div>
-
-  <div class="fan-stage reveal" style="--d:.22s">
-    <div class="fan-glow" aria-hidden="true"></div>
-    <div class="fan-frame" id="fanFrame">
-      <img id="fanImg" data-src="pc-fan.jpg" alt="FX-300 ARGB fan"
-           data-fb="pc-fan.png|pc-fan.jpeg|pc-fan.webp" loading="lazy" decoding="async"
-           onload="imgOk(this)" onerror="imgFail(this)">
-    </div>
-    <div class="fan-ph" id="fanPh" hidden aria-hidden="true">
-      <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.5"/><path d="M12 3a4.2 4.2 0 0 1 0 8M21 12a4.2 4.2 0 0 1-8 0M12 21a4.2 4.2 0 0 1 0-8M3 12a4.2 4.2 0 0 1 8 0"/></svg>
-      <b>Photo slot</b><small>save as pc-fan.jpg</small>
-    </div>
-    <p class="fan-cap">Select a mode to preview the ambient lighting. The photo shows the fan as shipped.</p>
   </div>
 </section>
 
@@ -1057,7 +951,6 @@ window.addEventListener('load', function(){
       <div class="spec-row"><dt>Chassis</dt><dd>Mid-tower · Ceramic White steel · Tempered-glass side panel · High-airflow mesh front</dd></div>
       <div class="spec-row"><dt>Fans</dt><dd>4 × 120mm ARGB (3 front intake, 1 rear exhaust)</dd></div>
       <div class="spec-row"><dt>CPU cooler</dt><dd>120mm ARGB air cooler</dd></div>
-      <div class="spec-row"><dt>Lighting</dt><dd>Addressable RGB on fans, memory and CPU ring · 5 modes via case button · no software required</dd></div>
       <div class="spec-row"><dt>Cables</dt><dd>White sleeved extensions, pre-installed</dd></div>
       <div class="spec-row"><dt>Power</dt><dd>550W · 80+ Bronze · semi-modular</dd></div>
       <div class="spec-row"><dt>Weight</dt><dd>8.4 kg</dd></div>
@@ -1107,12 +1000,8 @@ window.addEventListener('load', function(){
       <p>Yes. The FX-300 uses standard, off-the-shelf parts throughout: additional RAM slots, a free M.2 slot, and a side panel that opens with two thumbscrews. No proprietary components.</p>
     </details>
     <details>
-      <summary>When does the first run ship? <span class="plus"><svg width="14" height="14" viewBox="0 0 14 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7 1.5v11M1.5 7h11"/></svg></span></summary>
-      <p>Orders placed at launch ship within 24 hours and typically arrive in 5–7 business days. Every unit is inspected and burn-in tested before it leaves our bench.</p>
-    </details>
-    <details>
-      <summary>Can I turn the lighting off? <span class="plus"><svg width="14" height="14" viewBox="0 0 14 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7 1.5v11M1.5 7h11"/></svg></span></summary>
-      <p>Yes. The button on top of the case cycles through five modes — Rainbow, Aurora, Pulse, Ice, and Off. No software or account required.</p>
+      <summary>When does the first run go on sale? <span class="plus"><svg width="14" height="14" viewBox="0 0 14 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7 1.5v11M1.5 7h11"/></svg></span></summary>
+      <p>December 24 at 1:00 PM Eastern Time. Orders placed at launch ship within 24 hours and typically arrive in 5–7 business days. Every unit is inspected and burn-in tested before it leaves our facility.</p>
     </details>
   </div>
 </section>
@@ -1170,7 +1059,7 @@ window.addEventListener('load', function(){
   <div class="foot-inner">
     <div class="foot-grid">
       <div>
-        <div class="foot-brand">Frugal</div>
+        <div class="foot-brand">Titan Systems</div>
         <p class="foot-tag">Full-size gaming performance, priced for everyone. Designed, assembled, and supported in-house.</p>
       </div>
       <div>
@@ -1195,28 +1084,13 @@ window.addEventListener('load', function(){
         <a href="#top">Back to top</a>
       </div>
     </div>
-    <p class="foot-legal">Copyright © 2025 Frugal Computing, Inc. All rights reserved. Frugal and FX-300 are trademarks of Frugal Computing, Inc. Product photography is representative; actual product may vary slightly. First-run quantity is limited; orders are fulfilled first-come, first-served.</p>
+    <p class="foot-legal">Copyright © 2025 Titan Systems, Inc. All rights reserved. Titan Systems and FX-300 are trademarks of Titan Systems, Inc. Product photography is representative; actual product may vary slightly. First-run quantity is limited; orders are fulfilled first-come, first-served.</p>
     <div class="foot-bottom">
       <span>United States</span>
       <span><a href="#top">Privacy</a><a href="#top">Terms</a><a href="#footnotes">Legal</a></span>
     </div>
   </div>
 </footer>
-
-<!-- ============ LIGHTBOX ============ -->
-<div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="Photo viewer">
-  <button class="lb-x" id="lbX" aria-label="Close">
-    <svg width="13" height="13" viewBox="0 0 12 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M1.5 1.5l9 9M10.5 1.5l-9 9"/></svg>
-  </button>
-  <button class="lb-nav lb-prev" id="lbPrev" aria-label="Previous photo">
-    <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3L5 8l5 5"/></svg>
-  </button>
-  <img id="lbImg" src="" alt="">
-  <p class="lb-cap" id="lbCap"></p>
-  <button class="lb-nav lb-next" id="lbNext" aria-label="Next photo">
-    <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg>
-  </button>
-</div>
 
 <!-- ============ BAG / CHECKOUT MODAL ============ -->
 <div class="modal-backdrop" id="backdrop" hidden>
@@ -1307,8 +1181,8 @@ window.addEventListener('load', function(){
       <p class="m-sub" id="notifySub">Be first in line when the FX-300 launches.</p>
       <div style="height:18px"></div>
       <label>Email<input id="nEmail" type="email" placeholder="you@email.com" autocomplete="email"></label>
-      <button class="pill m-cta" type="submit">Notify Me</button>
-      <p class="m-lock">One email at launch. No marketing.</p>
+      <button class="pill m-cta" id="nSubmit" type="submit">Notify Me</button>
+      <p class="m-lock">You'll receive a confirmation email now, and one at launch.</p>
     </form>
   </div>
 </div>
@@ -1331,9 +1205,36 @@ window.addEventListener('load', function(){
 <script>
   const $ = id => document.getElementById(id);
 
-  /* Countdown length in days (90 ≈ 3 months), or pin TARGET_DATE instead */
-  const LAUNCH_IN_DAYS = 90;
-  const TARGET_DATE = null;   /* e.g. "2025-06-01T10:00:00" */
+  /* ============================================================
+     EASY EDIT — the only things you need to touch
+     ============================================================ */
+  /* Your real inbox. Notify signups and order receipts are delivered
+     here via FormSubmit (free, no account).
+     NOTE: the FIRST submission triggers a one-time activation email
+     from FormSubmit — click the link in it once, and delivery is live
+     from then on. */
+  const NOTIFY_EMAIL = "you@example.com";
+
+  /* Launch moment — December 24, 1:00 PM Eastern Time.
+     The next upcoming occurrence is used automatically. */
+  const LAUNCH = { month: 12, day: 24, hour: 13, minute: 0, tz: 'America/New_York' };
+  /* ============================================================ */
+
+  /* ---------- Real email delivery (FormSubmit AJAX) ---------- */
+  function postEmail(payload){
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), 6000);
+    return fetch('https://formsubmit.co/ajax/' + encodeURIComponent(NOTIFY_EMAIL), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(Object.assign({ _captcha: 'false', _template: 'table' }, payload)),
+      signal: ctrl.signal
+    }).then(r => {
+      clearTimeout(t);
+      if (!r.ok) throw new Error('email send failed');
+      return r.json();
+    });
+  }
 
   /* ---------- Toast ---------- */
   const toast = $('toast');
@@ -1345,16 +1246,15 @@ window.addEventListener('load', function(){
     toastTimer = setTimeout(() => toast.classList.remove('show'), 3800);
   }
 
-  /* Support = copy email to clipboard */
-  const SUPPORT_EMAIL = 'support@frugalcomputing.com';
+  const SUPPORT_EMAIL = 'support@titansystems.com';
   document.querySelectorAll('.js-support').forEach(l =>
     l.addEventListener('click', async e => {
       e.preventDefault();
       try{
         await navigator.clipboard.writeText(SUPPORT_EMAIL);
-        showToast('support@frugalcomputing.com copied to clipboard.');
+        showToast(SUPPORT_EMAIL + ' copied to clipboard.');
       }catch(err){
-        showToast('Support: support@frugalcomputing.com · Mon–Fri, 9:00–18:00 PT.');
+        showToast('Support: ' + SUPPORT_EMAIL + ' · Mon–Fri, 9:00–18:00 ET.');
       }
     }));
   document.querySelectorAll('.js-status').forEach(l =>
@@ -1368,45 +1268,69 @@ window.addEventListener('load', function(){
   })();
 
   /* =========================================================
-     LAUNCH STATE — persisted; at zero → SOLD OUT. Test URLs:
-       ?soldout · ?buy · ?reset
+     LAUNCH DATE — fixed wall-clock moment in a named timezone.
+     Builds "next Dec 24, 1:00 PM ET" no matter when it's opened.
      ========================================================= */
-  const DAY = 864e5;
-  const K_LAUNCH = 'fx300_launch', K_SOLD = 'fx300_soldout', K_NOTIFY = 'fx300_notified';
-  const params = new URLSearchParams(location.search);
-
-  if (params.has('reset')){
-    try{ localStorage.removeItem(K_LAUNCH); localStorage.removeItem(K_SOLD); localStorage.removeItem(K_NOTIFY); }catch(e){}
-  }
-  function getLaunchDate(){
-    if (TARGET_DATE){
-      const t = new Date(TARGET_DATE);
-      if (!isNaN(t)) return t;
+  function zonedTime(y, mo, d, h, mi, tz){
+    let utc = Date.UTC(y, mo - 1, d, h, mi);
+    for (let i = 0; i < 2; i++){
+      const dtf = new Intl.DateTimeFormat('en-US', {
+        timeZone: tz, year:'numeric', month:'2-digit', day:'2-digit',
+        hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false
+      });
+      const parts = dtf.formatToParts(new Date(utc));
+      const get = t => +parts.find(p => p.type === t).value;
+      const asUTC = Date.UTC(get('year'), get('month') - 1, get('day'),
+                             get('hour') % 24, get('minute'), get('second'));
+      utc += (Date.UTC(y, mo - 1, d, h, mi) - asUTC);
     }
-    try{
-      const v = localStorage.getItem(K_LAUNCH);
-      if (v) return new Date(+v);
-    }catch(e){}
-    const d = new Date(Date.now() + LAUNCH_IN_DAYS * DAY);
-    try{ localStorage.setItem(K_LAUNCH, d.getTime()); }catch(e){}
-    return d;
+    return new Date(utc);
   }
-  const launchDate = getLaunchDate();
-  const windowMs = LAUNCH_IN_DAYS * DAY;
+  (function buildLaunch(){
+    const now = new Date();
+    let d = zonedTime(now.getFullYear(), LAUNCH.month, LAUNCH.day, LAUNCH.hour, LAUNCH.minute, LAUNCH.tz);
+    if (d.getTime() <= now.getTime())
+      d = zonedTime(now.getFullYear() + 1, LAUNCH.month, LAUNCH.day, LAUNCH.hour, LAUNCH.minute, LAUNCH.tz);
+    window.launchDate = d;
+  })();
+  const launchDate = window.launchDate;
+
+  /* ---------- Timezone conversions ---------- */
+  const fmtIn = tz => new Intl.DateTimeFormat('en-US',
+    { timeZone: tz, hour: 'numeric', minute: '2-digit' }).format(launchDate);
+  const ZONES = [
+    ['ET',  'America/New_York'],
+    ['CT',  'America/Chicago'],
+    ['MT',  'America/Denver'],
+    ['PT',  'America/Los_Angeles'],
+    ['GMT', 'Europe/London']
+  ];
+  (function renderZones(){
+    $('tzLine').innerHTML = ZONES.map(([label, tz], i) => {
+      const t = fmtIn(tz);
+      return i === 0 ? `<b>${t} ${label}</b>` : `${t} ${label}`;
+    }).join(' · ');
+    try{
+      const local = new Intl.DateTimeFormat('en-US', { hour:'numeric', minute:'2-digit' }).format(launchDate);
+      const tzName = (Intl.DateTimeFormat().resolvedOptions().timeZone || '').split('/').pop().replace(/_/g, ' ');
+      $('tzSub').textContent = `Your local time: ${local}${tzName ? ' (' + tzName + ')' : ''}`;
+    }catch(e){
+      $('tzSub').textContent = '';
+    }
+  })();
 
   let notified = false;
-  try{ notified = localStorage.getItem(K_NOTIFY) === '1'; }catch(e){}
+  try{ notified = localStorage.getItem('fx300_notified') === '1'; }catch(e){}
+
+  const params = new URLSearchParams(location.search);
+  if (params.has('reset')){ try{ localStorage.removeItem('fx300_notified'); }catch(e){} }
 
   let phase; /* 'soon' | 'soldout' | 'onsale' */
   if (params.has('buy'))          phase = 'onsale';
   else if (params.has('soldout')) phase = 'soldout';
-  else {
-    try{ if (localStorage.getItem(K_SOLD) === '1') phase = 'soldout'; }catch(e){}
-    if (!phase && Date.now() >= launchDate.getTime()) phase = 'soldout';
-    phase = phase || 'soon';
-  }
+  else phase = (Date.now() >= launchDate.getTime()) ? 'soldout' : 'soon';
 
-  const fmtLong  = d => d.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
+  const fmtLong  = d => d.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' });
   const fmtShort = d => d.toLocaleDateString('en-US', { month:'short', day:'numeric' });
 
   function refreshBuyButtons(){
@@ -1426,21 +1350,17 @@ window.addEventListener('load', function(){
       $('stockText').textContent = 'Sold out · Next run: join the list';
       $('launchLine').textContent = 'Launched ' + fmtShort(launchDate);
       $('promoText').textContent = 'FX-300. Sold out — next run announced soon.';
-      $('rPct').textContent = '100%';
-      $('rBar').style.width = '100%';
-      document.querySelector('.r-head span').textContent = 'First run · claimed';
       $('ctaTitle').textContent = 'The first run is gone.';
       $('ctaSub').textContent = 'Join the list to hear about the next one first.';
       $('notifySub').textContent = 'Get first word when the next FX-300 run is announced.';
     } else if (phase === 'soon'){
       $('stockLine').className = 'stock st-soon reveal in';
       $('stockText').textContent = 'Launching ' + fmtShort(launchDate) + ' · Limited first run';
-      $('launchLine').textContent = 'Launching ' + fmtLong(launchDate) + ' · ' +
-        launchDate.toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit' });
+      $('launchLine').textContent = 'Launching ' + fmtLong(launchDate) + ' · 1:00 PM Eastern Time';
       $('promoText').textContent = 'FX-300. Launching ' + fmtShort(launchDate) + '.';
       $('ctaTitle').textContent = 'Be first in line.';
       $('ctaSub').textContent = 'Limited first run. One email at launch — nothing more.';
-      $('notifySub').textContent = 'Be first in line when the FX-300 launches on ' + fmtShort(launchDate) + '.';
+      $('notifySub').textContent = 'Be first in line when the FX-300 launches on ' + fmtShort(launchDate) + ' at 1:00 PM ET.';
     } else {
       $('stockLine').className = 'stock reveal in';
       $('stockText').textContent = 'In stock · Ships within 24 hours';
@@ -1462,6 +1382,7 @@ window.addEventListener('load', function(){
     if (phase !== 'soon') return;
     const diff = launchDate.getTime() - Date.now();
     if (diff <= 0){ goSoldOut(true); return; }
+    const DAY = 864e5;
     $('cdD').textContent = Math.floor(diff / DAY);
     $('cdH').textContent = String(Math.floor(diff % DAY / 36e5)).padStart(2,'0');
     $('cdM').textContent = String(Math.floor(diff % 36e5 / 6e4)).padStart(2,'0');
@@ -1470,10 +1391,6 @@ window.addEventListener('load', function(){
       cdS.textContent = s;
       cdS.classList.remove('tick'); void cdS.offsetWidth; cdS.classList.add('tick');
     }
-    /* reservation bar: deterministic fill over the countdown window */
-    const pct = Math.min(87, Math.round(4 + (1 - diff / windowMs) * 83));
-    $('rPct').textContent = pct + '%';
-    $('rBar').style.width = pct + '%';
   }
   const clock = setInterval(tick, 1000);
   tick();
@@ -1482,26 +1399,9 @@ window.addEventListener('load', function(){
     if (phase === 'soldout') return;
     phase = 'soldout';
     clearInterval(clock);
-    try{ localStorage.setItem(K_SOLD, '1'); }catch(e){}
     applyPhase();
     if (announce) showToast("The first run of the FX-300 is sold out.");
   }
-
-  $('calBtn').addEventListener('click', () => {
-    const pad = n => String(n).padStart(2,'0');
-    const stamp = d => `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}T${pad(d.getHours())}${pad(d.getMinutes())}00`;
-    const end = new Date(launchDate.getTime() + 36e5);
-    const ics = ["BEGIN:VCALENDAR","VERSION:2.0","BEGIN:VEVENT",
-      "DTSTART:" + stamp(launchDate), "DTEND:" + stamp(end),
-      "SUMMARY:FX-300 launch",
-      "DESCRIPTION:First run of the $299 FX-300 gaming desktop goes on sale.",
-      "END:VEVENT","END:VCALENDAR"].join("\r\n");
-    const a = document.createElement('a');
-    a.href = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics);
-    a.download = 'fx300-launch.ics';
-    a.click();
-    showToast("Calendar invite downloaded.");
-  });
 
   /* ---------- Scroll reveal ---------- */
   const revealIO = new IntersectionObserver(entries => {
@@ -1593,23 +1493,6 @@ window.addEventListener('load', function(){
     btns[i].focus();
   });
 
-  /* ---------- Lighting modes (ambient glow; photo untouched) ---------- */
-  const MODES = ['rainbow','wave','pulse','ice','off'];
-  const LIGHT_KEY = 'fx300_light';
-  let lightMode = 'rainbow';
-  try{ const s = localStorage.getItem(LIGHT_KEY); if (MODES.includes(s)) lightMode = s; }catch(e){}
-  function setLight(mode, save){
-    document.body.classList.remove(...MODES.map(m => 'light-' + m));
-    document.body.classList.add('light-' + mode);
-    document.querySelectorAll('.lchip').forEach(c =>
-      c.classList.toggle('on', c.dataset.mode === mode));
-    lightMode = mode;
-    if (save){ try{ localStorage.setItem(LIGHT_KEY, mode); }catch(e){} }
-  }
-  document.querySelectorAll('.lchip').forEach(c =>
-    c.addEventListener('click', () => setLight(c.dataset.mode, true)));
-  setLight(lightMode, false);
-
   /* ---------- Price countdown ---------- */
   const priceNum = $('priceNum'), priceSave = $('priceSave');
   new IntersectionObserver((entries, io) => {
@@ -1630,7 +1513,7 @@ window.addEventListener('load', function(){
       }
     });
   }, { rootMargin: '-45% 0px -50% 0px' });
-  ['overview','design','performance','graphics','lighting','price','reviews','compare','specs','faq'].forEach(id => {
+  ['overview','design','performance','graphics','price','reviews','compare','specs','faq'].forEach(id => {
     const el = $(id);
     if (el) spy.observe(el);
   });
@@ -1663,49 +1546,6 @@ window.addEventListener('load', function(){
   mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
   window.addEventListener('resize', () => { if (window.innerWidth > 760) closeMenu(); });
 
-  /* ---------- Lightbox (mouse + keyboard) ---------- */
-  const lb = $('lightbox'), lbImg = $('lbImg'), lbCap = $('lbCap');
-  const shots = [...document.querySelectorAll('#gallery .shot')];
-  let lbIdx = 0;
-  function visibleShots(){ return shots.filter(f => !f.classList.contains('noimg') && f.querySelector('img.loaded')); }
-  function renderLb(){
-    const vis = visibleShots();
-    if (!vis.length) return;
-    lbIdx = (lbIdx + vis.length) % vis.length;
-    const fig = vis[lbIdx], im = fig.querySelector('img');
-    lbImg.src = im.src;
-    lbImg.alt = im.alt;
-    lbCap.textContent = fig.querySelector('figcaption').textContent;
-    $('lbPrev').style.display = $('lbNext').style.display = vis.length > 1 ? 'grid' : 'none';
-  }
-  function openLb(startIdx){
-    const vis = visibleShots();
-    lbIdx = Math.max(0, vis.indexOf(shots[startIdx]));
-    renderLb();
-    lb.hidden = false;
-    requestAnimationFrame(() => lb.classList.add('show'));
-    document.body.style.overflow = 'hidden';
-    $('lbX').focus();
-  }
-  function closeLb(){
-    lb.classList.remove('show');
-    document.body.style.overflow = '';
-    setTimeout(() => { lb.hidden = true; lbImg.src = ''; }, 250);
-  }
-  shots.forEach((fig, i) => {
-    fig.addEventListener('click', () => { if (fig.querySelector('img.loaded')) openLb(i); });
-    fig.addEventListener('keydown', e => {
-      if ((e.key === 'Enter' || e.key === ' ') && fig.querySelector('img.loaded')){
-        e.preventDefault();
-        openLb(i);
-      }
-    });
-  });
-  $('lbX').addEventListener('click', closeLb);
-  $('lbPrev').addEventListener('click', () => { lbIdx--; renderLb(); });
-  $('lbNext').addEventListener('click', () => { lbIdx++; renderLb(); });
-  lb.addEventListener('click', e => { if (e.target === lb) closeLb(); });
-
   /* ---------- Focus trap for dialogs ---------- */
   function trapTab(e, root){
     if (e.key !== 'Tab') return;
@@ -1716,19 +1556,14 @@ window.addEventListener('load', function(){
     if (e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
     else if (!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
   }
-  [lb, $('backdrop'), $('notifyBackdrop')].forEach(root =>
+  [$('backdrop'), $('notifyBackdrop')].forEach(root =>
     root.addEventListener('keydown', e => trapTab(e, root)));
 
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape'){
-      if (!lb.hidden) return closeLb();
       if (!backdrop.hidden) return closeModal();
       if (!nBackdrop.hidden) return closeNotify();
       closeMenu();
-    }
-    if (!lb.hidden){
-      if (e.key === 'ArrowLeft')  { lbIdx--; renderLb(); }
-      if (e.key === 'ArrowRight') { lbIdx++; renderLb(); }
     }
   });
 
@@ -1789,7 +1624,7 @@ window.addEventListener('load', function(){
   $('promoBtn').addEventListener('click', buyAction);
 
   $('bagBtn').addEventListener('click', () => {
-    if (phase === 'soon'){ showToast("Sales open " + fmtShort(launchDate) + ". Join the notify list for a reminder."); return; }
+    if (phase === 'soon'){ showToast("Sales open " + fmtShort(launchDate) + " at 1:00 PM ET. Join the notify list for a reminder."); return; }
     if (phase === 'soldout'){ showToast("The first run is sold out. Join the list for the next one."); return; }
     if (bagQty === 0){ showToast("Your bag is empty."); return; }
     openModal('bag');
@@ -1847,26 +1682,48 @@ window.addEventListener('load', function(){
       return;
     }
     $('formErr').classList.remove('show');
+
+    const ordNum = 'FX-' + Math.floor(10000000 + Math.random() * 89999999);
+    const total  = money(UNIT * bagQty);
+    const email  = $('fEmail').value;
+    const name   = $('fName').value;
+    const addr   = $('fAddr').value + ', ' + $('fCity').value + ' ' + $('fZip').value;
+    postEmail({
+      email: email,
+      _subject: 'Titan Systems — Order ' + ordNum + ' confirmed',
+      Order: ordNum,
+      Item: 'FX-300 (Ceramic White) × ' + bagQty,
+      Total: total,
+      Ship_to: name + ' · ' + addr,
+      _autoresponse: 'Hello ' + name + ',\n\n' +
+        'Thank you for your order. This email confirms the following purchase from Titan Systems:\n\n' +
+        'Order number: ' + ordNum + '\n' +
+        'Item: FX-300 (Ceramic White) × ' + bagQty + '\n' +
+        'Total: ' + total + '\n\n' +
+        'Your unit will be inspected and burn-in tested before it ships, and will arrive within 5–7 business days.\n\n' +
+        'Titan Systems'
+    }).catch(() => { /* order still confirms even if the email service is unreachable */ });
+
     const btn = $('placeOrder');
     btn.classList.add('loading');
     setTimeout(() => {
       btn.classList.remove('loading');
-      $('ordNum').textContent = 'FX-' + Math.floor(10000000 + Math.random() * 89999999);
+      $('ordNum').textContent = ordNum;
       const fmt = d => d.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' });
       const now = Date.now();
-      $('arriveDate').textContent = fmt(new Date(now + 5 * DAY)) + ' – ' + fmt(new Date(now + 7 * DAY));
-      $('rcptEmail').textContent = $('fEmail').value || 'your inbox';
+      $('arriveDate').textContent = fmt(new Date(now + 5 * 864e5)) + ' – ' + fmt(new Date(now + 7 * 864e5));
+      $('rcptEmail').textContent = email || 'your inbox';
       go('done');
       bagQty = 0;
       updateBadge(false);
     }, 1300);
   });
 
-  /* ================= NOTIFY LIST ================= */
+  /* ================= NOTIFY LIST — sends a real email ================= */
   const nBackdrop = $('notifyBackdrop');
   function openNotify(restock){
     if (restock) $('notifySub').textContent = 'Get first word when the next FX-300 run is announced.';
-    else if (phase === 'soon') $('notifySub').textContent = 'Be first in line when the FX-300 launches on ' + fmtShort(launchDate) + '.';
+    else if (phase === 'soon') $('notifySub').textContent = 'Be first in line when the FX-300 launches on ' + fmtShort(launchDate) + ' at 1:00 PM ET.';
     nBackdrop.hidden = false;
     requestAnimationFrame(() => nBackdrop.classList.add('show'));
     document.body.style.overflow = 'hidden';
@@ -1880,7 +1737,8 @@ window.addEventListener('load', function(){
   $('nClose').addEventListener('click', closeNotify);
   nBackdrop.addEventListener('click', e => { if (e.target === nBackdrop) closeNotify(); });
   $('nEmail').addEventListener('input', e => e.target.classList.remove('invalid'));
-  $('notifyForm').addEventListener('submit', e => {
+
+  $('notifyForm').addEventListener('submit', async e => {
     e.preventDefault();
     const em = $('nEmail');
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em.value)){
@@ -1888,13 +1746,31 @@ window.addEventListener('load', function(){
       em.focus();
       return;
     }
-    notified = true;
-    try{ localStorage.setItem(K_NOTIFY, '1'); }catch(err){}
-    refreshBuyButtons();
-    closeNotify();
-    showToast(phase === 'soldout'
-      ? "You're on the list for the next run."
-      : "You're on the list. We'll email you at launch.");
+    const btn = $('nSubmit');
+    btn.classList.add('loading');
+    try{
+      await postEmail({
+        email: em.value,
+        _subject: 'Titan Systems — You have been added to the FX-300 notification list',
+        Signup: em.value,
+        _autoresponse:
+          'Hello,\n\n' +
+          'You have been added to the notification list for the Titan Systems FX-300.\n\n' +
+          'Sales open on December 24 at 1:00 PM ET (12:00 PM CT / 11:00 AM MT / 10:00 AM PT). ' +
+          'You will receive one email when sales open. No other messages will be sent to this address.\n\n' +
+          'If you did not request this, you may disregard this email — no action is required.\n\n' +
+          'Titan Systems'
+      });
+      notified = true;
+      try{ localStorage.setItem('fx300_notified', '1'); }catch(err){}
+      refreshBuyButtons();
+      closeNotify();
+      showToast("You're on the list — a confirmation email has been sent.");
+    }catch(err){
+      showToast("We couldn't reach the list just now. Please try again in a moment.");
+    }finally{
+      btn.classList.remove('loading');
+    }
   });
 </script>
 </body>
