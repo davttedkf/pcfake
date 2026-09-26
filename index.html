@@ -13,6 +13,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<!-- EmailJS — free email API for visitor confirmations (200 emails/month) -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
 /* =====================================================================
    IMAGE SETUP
@@ -99,16 +101,13 @@ window.addEventListener('load', function(){
   :focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:4px}
   img.broken{display:none}
 
-  /* ---------- Scroll progress ---------- */
   .progress{position:fixed;top:0;left:0;height:3px;width:0;background:var(--blue);z-index:80;pointer-events:none}
 
-  /* ---------- Promo banner ---------- */
   .promo{background:#000;color:#f5f5f7;text-align:center;font-size:13px;padding:12px 22px;line-height:1.5}
   .promo span{font-weight:600}
   .pbtn{background:none;border:none;color:var(--blue-dk);font:600 13px 'Hanken Grotesk';cursor:pointer;padding:0 0 0 6px}
   .pbtn:hover{text-decoration:underline}
 
-  /* ---------- Navs ---------- */
   .topnav{position:sticky;top:0;z-index:60;height:48px;
     background:rgba(255,255,255,.72);backdrop-filter:saturate(1.8) blur(18px);-webkit-backdrop-filter:saturate(1.8) blur(18px)}
   .nav-inner{max-width:1024px;margin:0 auto;height:100%;padding:0 22px;
@@ -148,7 +147,6 @@ window.addEventListener('load', function(){
   .sub-links a.on{color:var(--blue)}
   .subnav .pill{padding:6px 16px;font-size:13px;flex:none}
 
-  /* ---------- Hero ---------- */
   .hero{padding:88px 22px 40px;text-align:center}
   .eyebrow{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gray);margin-bottom:14px}
   .hero h1{font-size:clamp(72px,14vw,150px);font-weight:800;letter-spacing:-.05em;line-height:.95}
@@ -196,7 +194,6 @@ window.addEventListener('load', function(){
   .stock.st-out i{background:#86868b;animation:none}
   @keyframes pulse{50%{opacity:.35}}
 
-  /* ---------- Product photo ---------- */
   .pc-stage{margin:52px auto 0;max-width:600px}
   .pc-shot{position:relative;display:inline-block;max-width:min(560px,92vw);min-height:120px;
     background:radial-gradient(60% 60% at 50% 45%, #f6f7f9, transparent)}
@@ -214,22 +211,18 @@ window.addEventListener('load', function(){
   @keyframes hueRot{to{filter:hue-rotate(360deg)}}
   .hue{animation:hueRot 7s linear infinite}
 
-  /* ---------- Spec chips ---------- */
   .spechips{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:8px}
   .spechips span{background:var(--bg-gray);border-radius:999px;padding:9px 18px;
     font-size:13px;font-weight:600;color:var(--ink-2)}
 
-  /* ---------- Statement ---------- */
   .statement{padding:130px 22px;text-align:center}
   .statement h2{font-size:clamp(34px,5.5vw,58px);font-weight:800;letter-spacing:-.035em;line-height:1.08;max-width:820px;margin:0 auto}
   .statement .dim{color:var(--gray-lt)}
 
-  /* ---------- Sections ---------- */
   .section{padding:110px 22px;text-align:center}
   .section-h{font-size:clamp(34px,5vw,56px);font-weight:800;letter-spacing:-.03em;line-height:1.06;max-width:820px;margin:0 auto}
   .section-p{font-size:clamp(17px,2vw,19px);color:var(--ink-2);max-width:620px;margin:24px auto 0;line-height:1.55}
 
-  /* ---------- Feature grid ---------- */
   .fgrid{max-width:980px;margin:64px auto 0;display:grid;grid-template-columns:repeat(3,1fr);gap:18px;text-align:left}
   .fcard{background:var(--bg-gray);border-radius:22px;padding:28px 26px}
   .fcard .fico{width:44px;height:44px;border-radius:12px;background:#fff;display:grid;place-items:center;
@@ -237,7 +230,6 @@ window.addEventListener('load', function(){
   .fcard h4{font-size:17px;font-weight:700;letter-spacing:-.01em;margin-bottom:6px}
   .fcard p{font-size:14px;color:var(--ink-2);line-height:1.55}
 
-  /* ---------- Design gallery (3 images, static) ---------- */
   .gallery{max-width:980px;margin:64px auto 0;display:grid;grid-template-columns:repeat(3,1fr);gap:18px;text-align:left}
   .shot{margin:0;background:var(--bg-gray);border-radius:22px;overflow:hidden;
     transition:transform .3s cubic-bezier(.22,1,.36,1),box-shadow .3s}
@@ -257,7 +249,6 @@ window.addEventListener('load', function(){
   .shot .ph svg{opacity:.65}
   .shot .ph b{font-size:12.5px;font-weight:600}
   .shot .ph small{font-size:11px;color:#a8adb5}
-  /* logo badge overlaid on the 3rd gallery photo */
   .shot .wm{display:none;position:absolute;right:12px;bottom:12px;z-index:2;
     background:rgba(255,255,255,.92);border-radius:9px;padding:7px 11px;
     box-shadow:0 2px 10px rgba(0,0,0,.1)}
@@ -265,7 +256,6 @@ window.addEventListener('load', function(){
   .shot .wm img{height:18px;width:auto;max-width:110px;object-fit:contain;display:block;opacity:1}
   .shot figcaption{padding:14px 18px 16px;font-size:13px;color:var(--gray)}
 
-  /* FPS-per-dollar chart */
   .chart{max-width:780px;margin:64px auto 0;background:var(--bg-gray);border-radius:24px;padding:40px 44px;text-align:left}
   .chart h3{font-size:17px;font-weight:700;margin-bottom:28px}
   .c-row{display:grid;grid-template-columns:190px 1fr 96px;gap:18px;align-items:center;margin-bottom:22px}
@@ -279,7 +269,6 @@ window.addEventListener('load', function(){
   .c-val{font-size:14px;color:var(--gray);text-align:right;white-space:nowrap}
   .chart.go .bar-fill{width:var(--w)}
 
-  /* Dark graphics section */
   .dark{background:#000;color:#f5f5f7}
   .dark .eyebrow{color:var(--gray-lt)}
   .dark .section-p{color:#a1a1a6}
@@ -303,7 +292,6 @@ window.addEventListener('load', function(){
   .cdot{width:8px;height:8px;border-radius:50%;display:inline-block}
   .fps-fn{margin-top:22px;font-size:12px;color:var(--gray-lt)}
 
-  /* ---------- Lifestyle banner ---------- */
   .banner-sec{position:relative;min-height:480px;display:flex;align-items:center;justify-content:center;
     overflow:hidden;text-align:center;color:#fff}
   .banner-sec img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .6s}
@@ -313,7 +301,6 @@ window.addEventListener('load', function(){
   .banner-inner h2{font-size:clamp(32px,5vw,52px);font-weight:800;letter-spacing:-.03em;line-height:1.08}
   .banner-inner p{margin-top:16px;font-size:17px;color:#d9d9de}
 
-  /* ---------- Price ---------- */
   .price-sec{background:var(--bg-gray)}
   .price-big{margin:56px auto 8px;font-size:clamp(76px,17vw,150px);font-weight:800;letter-spacing:-.05em;line-height:1}
   .price-was{font-size:15px;color:var(--gray)}
@@ -330,7 +317,6 @@ window.addEventListener('load', function(){
   .buy-row .pill{font-size:16px;padding:12px 30px}
   .buy-micro{margin-top:14px;font-size:13px;color:var(--gray-lt)}
 
-  /* Reviews */
   body.phase-soon #reviews{display:none}
   .rev-summary{margin:26px 0 42px}
   .rev-num{font-size:38px;font-weight:800;letter-spacing:-.02em}
@@ -344,7 +330,6 @@ window.addEventListener('load', function(){
   .rev-card p{font-size:14px;color:var(--ink-2);line-height:1.55;margin-bottom:16px;flex:1}
   .rev-who{font-size:12px;color:var(--gray);display:flex;align-items:center;gap:6px;font-weight:600}
 
-  /* Compare */
   .compare-scroll{max-width:980px;margin:60px auto 0;overflow-x:auto;padding:0 2px 6px}
   .compare{min-width:720px;display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;text-align:left}
   .cell{padding:16px 18px;font-size:14px;border-top:1px solid var(--line);display:flex;align-items:center;color:var(--ink-2)}
@@ -357,7 +342,6 @@ window.addEventListener('load', function(){
   .cell .dash{color:var(--gray-lt)}
   .cell .val-strong{color:var(--ink);font-weight:600}
 
-  /* Specs */
   .specs-sec{background:var(--bg-gray);text-align:left}
   .specs-sec .sec-head{text-align:center}
   .spec-group{max-width:820px;margin:64px auto 0}
@@ -366,7 +350,6 @@ window.addEventListener('load', function(){
   .spec-row dt{font-size:12px;color:var(--gray);font-weight:600}
   .spec-row dd{font-size:14px;color:var(--ink);line-height:1.5}
 
-  /* FAQ */
   .faq{max-width:720px;margin:64px auto 0;text-align:left}
   .faq details{border-top:1px solid var(--line)}
   .faq details:last-child{border-bottom:1px solid var(--line)}
@@ -378,20 +361,17 @@ window.addEventListener('load', function(){
   .faq details[open] .plus{transform:rotate(45deg)}
   .faq details p{padding:0 4px 20px;color:var(--ink-2);font-size:14.5px;line-height:1.65;max-width:600px}
 
-  /* ---------- Support cards ---------- */
   .ag-grid{max-width:980px;margin:64px auto 0;display:grid;grid-template-columns:repeat(4,1fr);gap:18px;text-align:left}
   .acard{background:var(--bg-gray);border-radius:18px;padding:24px}
   .acard svg{color:var(--ink);margin-bottom:14px}
   .acard h4{font-size:14.5px;font-weight:700;margin-bottom:5px}
   .acard p{font-size:13px;color:var(--ink-2);line-height:1.5}
 
-  /* ---------- CTA band ---------- */
   .cta-band{background:#000;color:#f5f5f7;text-align:center;padding:110px 22px}
   .cta-band h2{font-size:clamp(32px,5vw,54px);font-weight:800;letter-spacing:-.03em}
   .cta-band p{margin:16px auto 34px;font-size:17px;color:#a1a1a6;max-width:480px;line-height:1.55}
   .cta-band .pill{font-size:16px;padding:13px 32px}
 
-  /* Footnotes + footer */
   .footnotes{padding:70px 22px 40px;max-width:820px;margin:0 auto}
   .footnotes h3{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:14px}
   .footnotes ol{padding-left:18px}
@@ -413,14 +393,12 @@ window.addEventListener('load', function(){
   .foot-bottom a{color:var(--gray);margin-right:18px}
   .foot-bottom a:hover{color:var(--ink)}
 
-  /* ---------- Toast ---------- */
   .toast{position:fixed;left:50%;bottom:88px;transform:translate(-50%,16px);z-index:120;
     background:#1d1d1f;color:#f5f5f7;font-size:14px;padding:13px 22px;border-radius:999px;
     box-shadow:0 10px 34px rgba(0,0,0,.28);opacity:0;pointer-events:none;
     transition:opacity .35s,transform .35s cubic-bezier(.22,1,.36,1);max-width:88vw;text-align:center}
   .toast.show{opacity:1;transform:translate(-50%,0)}
 
-  /* ---------- Sticky buy bar ---------- */
   .buybar{position:fixed;left:0;right:0;bottom:0;z-index:70;
     background:rgba(255,255,255,.86);backdrop-filter:saturate(1.8) blur(18px);-webkit-backdrop-filter:saturate(1.8) blur(18px);
     border-top:1px solid var(--line);transform:translateY(100%);transition:transform .35s cubic-bezier(.22,1,.36,1)}
@@ -434,14 +412,12 @@ window.addEventListener('load', function(){
   .bb-price{margin-left:auto;font-size:15px;font-weight:700}
   .buybar .pill{flex:none}
 
-  /* ---------- Back to top ---------- */
   .to-top{position:fixed;right:22px;bottom:86px;z-index:65;width:44px;height:44px;border-radius:50%;
     border:none;background:rgba(29,29,31,.85);color:#fff;cursor:pointer;display:grid;place-items:center;
     opacity:0;pointer-events:none;transform:translateY(8px);transition:.3s;box-shadow:0 8px 24px rgba(0,0,0,.25)}
   .to-top.show{opacity:1;pointer-events:auto;transform:none}
   .to-top:hover{background:#1d1d1f}
 
-  /* ---------- Modals ---------- */
   .modal-backdrop{position:fixed;inset:0;z-index:90;background:rgba(29,29,31,.42);
     backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
     display:flex;align-items:center;justify-content:center;padding:20px;
@@ -1193,7 +1169,7 @@ window.addEventListener('load', function(){
         <h3 class="m-title">Order confirmed.</h3>
         <p class="m-done-line">Order <strong id="ordNum">FX-00000000</strong></p>
         <p class="m-done-line">Arrives <strong id="arriveDate">soon</strong></p>
-        <p class="m-done-sub">A receipt has been sent to <span id="rcptEmail">your inbox</span>. Every FX-300 is inspected and burn-in tested before it ships.</p>
+        <p class="m-done-sub" id="rcptSub">A receipt has been sent to <span id="rcptEmail">your inbox</span>. Every FX-300 is inspected and burn-in tested before it ships.</p>
         <button class="pill m-cta" id="doneBtn">Done</button>
       </div>
     </section>
@@ -1236,33 +1212,50 @@ window.addEventListener('load', function(){
   const $ = id => document.getElementById(id);
 
   /* ============================================================
-     EASY EDIT — the only thing you need to touch
+     EASY EDIT
      ============================================================ */
-  /* Your real inbox. Notify signups and order receipts are delivered
-     here via FormSubmit (free, no account). Your address is already
-     activated, so every submission arrives in your inbox AND the
-     visitor automatically receives the confirmation email. */
-  const NOTIFY_EMAIL = "alexdavitt250@gmail.com";   /* ← PUT YOUR EMAIL HERE */
+  /* 1) FormSubmit — delivers signups/orders to YOUR inbox.
+        Your address is already activated, so this keeps working. */
+  const NOTIFY_EMAIL = "noreplytitansystems@gmail.com";   /* ← your email (owner copy) */
+
+  /* 2) EmailJS — free API (200 emails/month) that sends the VISITOR
+        their confirmation email from YOUR connected address.
+
+        SETUP (one time, ~5 min):
+        a) Free account at emailjs.com
+        b) "Email Services" → Add Service (Gmail/Outlook) → copy
+           the Service ID
+        c) "Email Templates" → Create Template:
+              To Email:  {{to_email}}
+              Subject:   Titan Systems — You have been added to the
+                         FX-300 notification list
+              Content:   (paste your professional letter — the exact
+                         text to use is in the chat summary)
+           → copy the Template ID
+        d) "Account" → copy your Public Key
+        e) Paste all three below. */
+  const EMAILJS = {
+    publicKey: "bdfTTHLlP2cYzF5z-",            /* ← from Account page        */
+    serviceId: "service_lc3fjip",            /* ← from Email Services      */
+    confirmTemplateId: "template_geepe0g",    /* ← signup confirmation      */
+    orderTemplateId: ""       /* ← optional: order receipt  */
+  };
   /* ============================================================ */
 
   const EMAIL_SET = NOTIFY_EMAIL && !/example\.com$/i.test(NOTIFY_EMAIL.trim());
-  if (!EMAIL_SET){
-    console.warn('[Titan Systems] Email delivery is not configured. Set NOTIFY_EMAIL at the top of the script to your real address, then submit the Notify form once and click the activation email FormSubmit sends you.');
-  }
+  if (!EMAIL_SET)
+    console.warn('[Titan Systems] Owner notifications not configured: set NOTIFY_EMAIL.');
+  const EJS_BASE_OK = typeof emailjs !== 'undefined' && EMAILJS.publicKey && EMAILJS.serviceId;
+  const EJS_CONFIRM_OK = EJS_BASE_OK && EMAILJS.confirmTemplateId;
+  const EJS_ORDER_OK   = EJS_BASE_OK && EMAILJS.orderTemplateId;
+  if (EJS_BASE_OK){ try{ emailjs.init({ publicKey: EMAILJS.publicKey }); }catch(e){} }
+  else console.warn('[Titan Systems] Visitor confirmations not configured: fill in the EMAILJS keys (publicKey / serviceId / confirmTemplateId).');
 
-  /* ---------- Email delivery (FormSubmit, standard endpoint) ----------
-     IMPORTANT: the standard endpoint is used — NOT the AJAX one —
-     because FormSubmit's _autoresponse (the confirmation email sent
-     to the visitor) is ONLY supported on the standard endpoint.
-     One submission delivers two emails:
-       1. The form data → your inbox (NOTIFY_EMAIL)
-       2. The _autoresponse text → the address in the "email" field
-     The submission targets a hidden iframe, so the visitor never
-     leaves the page and no redirect is visible. */
+  /* ---------- Owner copy (FormSubmit, hidden iframe) ---------- */
   let fsFrame = null;
   function postEmail(payload){
-    if (!EMAIL_SET) return Promise.reject(new Error('email-not-configured'));
-    return new Promise(resolve => {
+    if (!EMAIL_SET) return Promise.reject(new Error('owner-email-not-configured'));
+    return new Promise((resolve, reject) => {
       if (!fsFrame){
         fsFrame = document.createElement('iframe');
         fsFrame.name = 'fsDelivery';
@@ -1276,18 +1269,30 @@ window.addEventListener('load', function(){
       const fields = Object.assign({ _captcha: 'false', _template: 'table' }, payload);
       Object.entries(fields).forEach(([k, v]) => {
         const i = document.createElement('input');
-        i.type = 'hidden';
-        i.name = k;
-        i.value = String(v);
+        i.type = 'hidden'; i.name = k; i.value = String(v);
         form.appendChild(i);
       });
       document.body.appendChild(form);
       form.submit();
-      /* The POST is dispatched immediately; the iframe response is
-         irrelevant (FormSubmit's thank-you page may refuse to render
-         in an iframe, but delivery has already happened server-side). */
       setTimeout(() => { form.remove(); resolve(); }, 1200);
     });
+  }
+
+  /* ---------- Visitor emails (EmailJS free API) ---------- */
+  function ejsSend(templateId, params){
+    return emailjs.send(EMAILJS.serviceId, templateId, params, { publicKey: EMAILJS.publicKey });
+  }
+  /* Sends the professional confirmation to the person who signed up */
+  function sendVisitorConfirm(to){
+    if (!EJS_CONFIRM_OK) return Promise.reject(new Error('emailjs-not-configured'));
+    return ejsSend(EMAILJS.confirmTemplateId, { to_email: to });
+  }
+  /* Optional: order receipt to the customer.
+     Template fields: To Email = {{to_email}}, content uses
+     {{name}} {{order_number}} {{item}} {{total}} */
+  function sendOrderReceipt(p){
+    if (!EJS_ORDER_OK) return Promise.reject(new Error('emailjs-not-configured'));
+    return ejsSend(EMAILJS.orderTemplateId, p);
   }
 
   /* ---------- Toast ---------- */
@@ -1348,7 +1353,6 @@ window.addEventListener('load', function(){
   })();
   const launchDate = window.launchDate;
 
-  /* ---------- Timezone conversions ---------- */
   const fmtIn = tz => new Intl.DateTimeFormat('en-US',
     { timeZone: tz, hour: 'numeric', minute: '2-digit' }).format(launchDate);
   const ZONES = [
@@ -1378,7 +1382,7 @@ window.addEventListener('load', function(){
   const params = new URLSearchParams(location.search);
   if (params.has('reset')){ try{ localStorage.removeItem('fx300_notified'); }catch(e){} }
 
-  let phase; /* 'soon' | 'soldout' | 'onsale' */
+  let phase;
   if (params.has('buy'))          phase = 'onsale';
   else if (params.has('soldout')) phase = 'soldout';
   else phase = (Date.now() >= launchDate.getTime()) ? 'soldout' : 'soon';
@@ -1498,7 +1502,7 @@ window.addEventListener('load', function(){
     });
   }, { threshold: .4 }).observe(chart);
 
-  /* ---------- FPS widget with cross-bench comparison ---------- */
+  /* ---------- FPS widget ---------- */
   const GAMES = [
     { name:'Fortnite',       fps:144, con:60,  pre:240, settings:'1080p · Performance Mode',     note:"High-refresh performance out of the box." },
     { name:'Valorant',       fps:240, con:120, pre:360, settings:'1080p · High',                 note:"Competitive-ready frame rates." },
@@ -1571,7 +1575,7 @@ window.addEventListener('load', function(){
     if (el) spy.observe(el);
   });
 
-  /* ---------- Scroll: progress bar + buy bar + back to top ---------- */
+  /* ---------- Scroll: progress + buy bar + back to top ---------- */
   const buybar = $('buybar'), toTop = $('toTop'), progress = $('progress');
   new IntersectionObserver(entries => {
     entries.forEach(en => buybar.classList.toggle('show', !en.isIntersecting && en.boundingClientRect.top < 0));
@@ -1599,7 +1603,7 @@ window.addEventListener('load', function(){
   mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
   window.addEventListener('resize', () => { if (window.innerWidth > 760) closeMenu(); });
 
-  /* ---------- Focus trap for dialogs ---------- */
+  /* ---------- Focus trap ---------- */
   function trapTab(e, root){
     if (e.key !== 'Tab') return;
     const f = [...root.querySelectorAll('button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])')]
@@ -1741,39 +1745,50 @@ window.addEventListener('load', function(){
     const email  = $('fEmail').value;
     const name   = $('fName').value;
     const addr   = $('fAddr').value + ', ' + $('fCity').value + ' ' + $('fZip').value;
-    /* One POST: order details → your inbox, receipt → the customer */
-    postEmail({
-      email: email,
-      _subject: 'Titan Systems — Order ' + ordNum + ' confirmed',
-      Order: ordNum,
-      Item: 'FX-300 (Ceramic White) × ' + bagQty,
-      Total: total,
-      Ship_to: name + ' · ' + addr,
-      _autoresponse: 'Hello ' + name + ',\n\n' +
-        'Thank you for your order. This email confirms the following purchase from Titan Systems:\n\n' +
-        'Order number: ' + ordNum + '\n' +
-        'Item: FX-300 (Ceramic White) × ' + bagQty + '\n' +
-        'Total: ' + total + '\n\n' +
-        'Your unit will be inspected and burn-in tested before it ships, and will arrive within 5–7 business days.\n\n' +
-        'Titan Systems'
-    }).catch(() => { /* order still confirms even if the email service is unreachable */ });
 
     const btn = $('placeOrder');
     btn.classList.add('loading');
-    setTimeout(() => {
+
+    /* owner copy + customer receipt, sent together */
+    const jobs = [];
+    if (EMAIL_SET){
+      jobs.push(postEmail({
+        email: email,
+        _subject: 'Titan Systems — Order ' + ordNum + ' confirmed',
+        Order: ordNum,
+        Item: 'FX-300 (Ceramic White) × ' + bagQty,
+        Total: total,
+        Ship_to: name + ' · ' + addr
+      }));
+    }
+    if (EJS_ORDER_OK){
+      jobs.push(sendOrderReceipt({
+        to_email: email,
+        name: name,
+        order_number: ordNum,
+        item: 'FX-300 (Ceramic White) × ' + bagQty,
+        total: total
+      }));
+    }
+    Promise.allSettled(jobs).then(results => {
+      const receiptSent = results.some(r => r.status === 'fulfilled');
       btn.classList.remove('loading');
       $('ordNum').textContent = ordNum;
       const fmt = d => d.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' });
       const now = Date.now();
       $('arriveDate').textContent = fmt(new Date(now + 5 * 864e5)) + ' – ' + fmt(new Date(now + 7 * 864e5));
-      $('rcptEmail').textContent = email || 'your inbox';
+      $('rcptSub').innerHTML = receiptSent
+        ? 'A receipt has been sent to <span id="rcptEmail"></span>. Every FX-300 is inspected and burn-in tested before it ships.'
+        : 'Your order is confirmed. A receipt will be emailed to <span id="rcptEmail"></span>. Every FX-300 is inspected and burn-in tested before it ships.';
+      const rc = document.getElementById('rcptEmail');
+      if (rc) rc.textContent = email || 'your inbox';
       go('done');
       bagQty = 0;
       updateBadge(false);
-    }, 1300);
+    });
   });
 
-  /* ================= NOTIFY LIST — real email + visitor confirmation ================= */
+  /* ================= NOTIFY LIST — owner copy + visitor confirmation ================= */
   const nBackdrop = $('notifyBackdrop');
   function openNotify(restock){
     if (restock) $('notifySub').textContent = 'Get first word when the next FX-300 run is announced.';
@@ -1792,7 +1807,7 @@ window.addEventListener('load', function(){
   nBackdrop.addEventListener('click', e => { if (e.target === nBackdrop) closeNotify(); });
   $('nEmail').addEventListener('input', e => e.target.classList.remove('invalid'));
 
-  $('notifyForm').addEventListener('submit', e => {
+  $('notifyForm').addEventListener('submit', async e => {
     e.preventDefault();
     const em = $('nEmail');
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em.value)){
@@ -1800,36 +1815,42 @@ window.addEventListener('load', function(){
       em.focus();
       return;
     }
-    if (!EMAIL_SET){
-      showToast("Email delivery isn't set up yet — replace NOTIFY_EMAIL at the top of this file's script with your address.");
+    if (!EMAIL_SET && !EJS_CONFIRM_OK){
+      showToast("Email delivery isn't configured yet — set NOTIFY_EMAIL and the EMAILJS keys at the top of this file's script.");
       return;
     }
     const btn = $('nSubmit');
     btn.classList.add('loading');
-    /* One POST: signup → your inbox, confirmation → the visitor */
-    postEmail({
-      email: em.value,
-      _subject: 'Titan Systems — You have been added to the FX-300 notification list',
-      Signup: em.value,
-      _autoresponse:
-        'Hello,\n\n' +
-        'You have been added to the notification list for the Titan Systems FX-300.\n\n' +
-        'Sales open on December 24 at 1:00 PM ET (12:00 PM CT / 11:00 AM MT / 10:00 AM PT). ' +
-        'You will receive one email when sales open. No other messages will be sent to this address.\n\n' +
-        'If you did not request this, you may disregard this email — no action is required.\n\n' +
-        'Titan Systems'
-    }).then(() => {
-      notified = true;
-      try{ localStorage.setItem('fx300_notified', '1'); }catch(err){}
-      refreshBuyButtons();
-      closeNotify();
+
+    const jobs = [];
+    if (EMAIL_SET){
+      jobs.push(postEmail({
+        email: em.value,
+        _subject: 'Titan Systems — FX-300 notify-list signup',
+        Signup: em.value
+      }));
+    }
+    if (EJS_CONFIRM_OK){
+      jobs.push(sendVisitorConfirm(em.value));
+    }
+    const results = await Promise.allSettled(jobs);
+
+    const visitorSent = EJS_CONFIRM_OK && results[results.length - 1].status === 'fulfilled';
+    notified = true;
+    try{ localStorage.setItem('fx300_notified', '1'); }catch(err){}
+    refreshBuyButtons();
+    closeNotify();
+
+    if (visitorSent)
       showToast("You're on the list — a confirmation email has been sent.");
-    }).catch(err => {
-      console.error('[Titan Systems] Notify email failed:', err);
-      showToast("We couldn't reach the list just now. Please try again in a moment.");
-    }).finally(() => {
-      btn.classList.remove('loading');
-    });
+    else if (EJS_CONFIRM_OK)
+      showToast("You're on the list. The confirmation email couldn't be sent just now.");
+    else
+      showToast("You're on the list. (Site owner: add the EmailJS keys to enable visitor confirmation emails.)");
+
+    if (EJS_CONFIRM_OK && !visitorSent)
+      console.error('[Titan Systems] Visitor confirmation failed — check the EmailJS keys and template.', results);
+    btn.classList.remove('loading');
   });
 </script>
 </body>
