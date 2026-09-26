@@ -16,14 +16,16 @@
 <script>
 /* =====================================================================
    IMAGE SETUP
-   GitHub Pages (recommended): leave IMG_BASE = "" and place index.html
-   and the images in the same folder of your repo.
+   GitHub Pages: leave IMG_BASE = "" and keep images beside index.html.
+   Raw URLs instead: var IMG_BASE = "https://raw.githubusercontent.com/USER/REPO/main/";
 
-   Raw URLs (no Pages): set IMG_BASE to your folder URL, e.g.
-   var IMG_BASE = "https://raw.githubusercontent.com/USERNAME/REPO/main/";
-
-   Files used:  pc-hero.jpg (required) · pc-front.jpg · pc-side.jpg ·
-                pc-fan.jpg · pc-desk.jpg · og-image.jpg
+   Files:
+     pc-hero.jpg   required  — main 3/4 product shot
+     pc-front.jpg  gallery 1 — straight-on front view
+     pc-side.jpg   gallery 2 — glass side panel / internals
+     pc-fan.jpg    gallery 3 + Lighting section — ARGB fan close-up
+     pc-desk.jpg   optional  — lifestyle banner (hides if missing)
+     og-image.jpg  optional  — 1200×630 link preview
    ===================================================================== */
 var IMG_BASE = "";
 function applyBase(s){
@@ -44,20 +46,26 @@ function imgFail(img){
   }
   img.classList.add('broken');
   var fig = img.closest('.shot');
-  if (fig){ fig.classList.add('noimg'); checkGallery(); return; }
+  if (fig){ fig.classList.add('noimg'); fig.removeAttribute('tabindex'); fig.removeAttribute('role'); checkGallery(); return; }
   if (img.id === 'heroImg'){
     var st = document.getElementById('pcStage');
     if (st) st.classList.add('no-img');
     return;
   }
+  if (img.id === 'fanImg'){
+    var fr = document.getElementById('fanFrame'), ph = document.getElementById('fanPh');
+    if (fr) fr.style.display = 'none';
+    if (ph) ph.hidden = false;
+    return;
+  }
+  if (img.closest('.banner-sec')){ img.closest('.banner-sec').style.display = 'none'; return; }
   var sib = img.parentElement.querySelector('svg');
   if (sib) sib.style.display = 'block';
 }
 function checkGallery(){
   var g = document.getElementById('gallery');
   if (!g) return;
-  var left = g.querySelectorAll('.shot:not(.noimg)').length;
-  if (!left){
+  if (!g.querySelectorAll('.shot:not(.noimg)').length){
     var sec = document.getElementById('design');
     if (sec) sec.style.display = 'none';
   }
@@ -92,12 +100,14 @@ window.addEventListener('load', function(){
   :focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:4px}
   img.broken{display:none}
 
+  /* ---------- Scroll progress ---------- */
+  .progress{position:fixed;top:0;left:0;height:3px;width:0;background:var(--blue);z-index:80;pointer-events:none}
+
   /* ---------- Promo banner ---------- */
   .promo{background:#000;color:#f5f5f7;text-align:center;font-size:13px;padding:12px 22px;line-height:1.5}
   .promo span{font-weight:600}
   .pbtn{background:none;border:none;color:var(--blue-dk);font:600 13px 'Hanken Grotesk';cursor:pointer;padding:0 0 0 6px}
   .pbtn:hover{text-decoration:underline}
-  body.phase-soldout .pbtn{display:none}
 
   /* ---------- Navs ---------- */
   .topnav{position:sticky;top:0;z-index:60;height:48px;
@@ -111,9 +121,6 @@ window.addEventListener('load', function(){
     padding:8px 18px;border-radius:999px;transition:background .2s,transform .15s}
   .pill:hover{background:#0077ed}
   .pill:active{transform:scale(.97)}
-  .pill.sold{background:#e8e8ed;color:#86868b;cursor:not-allowed}
-  .pill.sold:hover{background:#e8e8ed}
-  .pill.sold:active{transform:none}
   .bag-btn{margin-left:auto;position:relative;border:none;background:none;cursor:pointer;
     padding:6px;color:var(--ink);display:grid;place-items:center;transition:color .2s}
   .bag-btn:hover{color:#000}
@@ -147,18 +154,29 @@ window.addEventListener('load', function(){
   sup.fn a{font-size:.55em;color:var(--blue)}
   sup.fn a:hover{text-decoration:underline}
 
-  /* Countdown */
   .launch-line{margin-top:30px;font-size:14px;font-weight:600;color:var(--gray)}
   .count{display:flex;justify-content:center;align-items:flex-start;gap:clamp(8px,3vw,26px);margin-top:10px}
   .cu{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:58px}
   .cu b{font-size:clamp(40px,7vw,64px);font-weight:800;letter-spacing:-.03em;line-height:1;
-    font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+    font-variant-numeric:tabular-nums}
   .cu b.tick{animation:tpop .35s}
   @keyframes tpop{30%{transform:scale(1.07)}}
   .cu span{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gray-lt)}
-  .csep{font-size:clamp(28px,5vw,44px);font-weight:300;color:#c7c7cc;line-height:1.3;font-variant-numeric:tabular-nums}
+  .csep{font-size:clamp(28px,5vw,44px);font-weight:300;color:#c7c7cc;line-height:1.3}
   .cal-btn{margin-top:16px;background:none;border:none;cursor:pointer;color:var(--blue);font:500 13px 'Hanken Grotesk'}
   .cal-btn:hover{text-decoration:underline}
+
+  /* First-run reservation */
+  .reserve{max-width:420px;margin:26px auto 0;text-align:left}
+  .r-head{display:flex;justify-content:space-between;font-size:12.5px;font-weight:600;color:var(--ink-2);margin-bottom:7px}
+  .r-head b{font-variant-numeric:tabular-nums}
+  .r-track{height:5px;background:#e8e8ed;border-radius:999px;overflow:hidden}
+  .r-track i{display:block;height:100%;width:0;background:linear-gradient(90deg,#0071e3,#2997ff);
+    border-radius:999px;transition:width 1.2s cubic-bezier(.22,1,.36,1)}
+  .r-note{margin-top:7px;font-size:11.5px;color:var(--gray-lt)}
+  body.phase-soldout .r-track i{background:#86868b}
+  body.phase-onsale .reserve{display:none}
+
   .soldout-block{margin-top:30px}
   .so-badge{display:inline-block;background:#1d1d1f;color:#fff;font-size:13px;font-weight:700;
     letter-spacing:.14em;text-transform:uppercase;padding:10px 20px;border-radius:999px}
@@ -201,10 +219,13 @@ window.addEventListener('load', function(){
   .no-img .pc-fb{display:block}
   .pc-caption{margin-top:22px;font-size:13px;color:var(--gray-lt)}
 
-  @keyframes spin{to{transform:rotate(360deg)}}
   @keyframes hueRot{to{filter:hue-rotate(360deg)}}
   .hue{animation:hueRot 7s linear infinite}
-  .b6{filter:blur(6px)}.b14{filter:blur(14px)}
+
+  /* ---------- Spec chips ---------- */
+  .spechips{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:8px}
+  .spechips span{background:var(--bg-gray);border-radius:999px;padding:9px 18px;
+    font-size:13px;font-weight:600;color:var(--ink-2)}
 
   /* ---------- Statement ---------- */
   .statement{padding:130px 22px;text-align:center}
@@ -216,10 +237,20 @@ window.addEventListener('load', function(){
   .section-h{font-size:clamp(34px,5vw,56px);font-weight:800;letter-spacing:-.03em;line-height:1.06;max-width:820px;margin:0 auto}
   .section-p{font-size:clamp(17px,2vw,19px);color:var(--ink-2);max-width:620px;margin:24px auto 0;line-height:1.55}
 
-  /* ---------- Design gallery ---------- */
-  .gallery{max-width:980px;margin:64px auto 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;text-align:left}
-  .shot{margin:0;background:var(--bg-gray);border-radius:22px;overflow:hidden;cursor:zoom-in;transition:transform .3s cubic-bezier(.22,1,.36,1),box-shadow .3s}
+  /* ---------- Feature grid ---------- */
+  .fgrid{max-width:980px;margin:64px auto 0;display:grid;grid-template-columns:repeat(3,1fr);gap:18px;text-align:left}
+  .fcard{background:var(--bg-gray);border-radius:22px;padding:28px 26px}
+  .fcard .fico{width:44px;height:44px;border-radius:12px;background:#fff;display:grid;place-items:center;
+    color:var(--ink);margin-bottom:18px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+  .fcard h4{font-size:17px;font-weight:700;letter-spacing:-.01em;margin-bottom:6px}
+  .fcard p{font-size:14px;color:var(--ink-2);line-height:1.55}
+
+  /* ---------- Design gallery (3 slots) ---------- */
+  .gallery{max-width:980px;margin:64px auto 0;display:grid;grid-template-columns:repeat(3,1fr);gap:18px;text-align:left}
+  .shot{margin:0;background:var(--bg-gray);border-radius:22px;overflow:hidden;cursor:zoom-in;
+    transition:transform .3s cubic-bezier(.22,1,.36,1),box-shadow .3s}
   .shot:hover{transform:translateY(-4px);box-shadow:0 14px 40px rgba(0,0,0,.08)}
+  .shot:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
   .shot.noimg{cursor:default}
   .shot.noimg:hover{transform:none;box-shadow:none}
   .imgwrap{position:relative;aspect-ratio:4/3.1;overflow:hidden}
@@ -228,8 +259,9 @@ window.addEventListener('load', function(){
     transform:translateX(-100%);animation:shimmer 1.4s infinite}
   .imgwrap.done::before{display:none}
   @keyframes shimmer{to{transform:translateX(100%)}}
-  .shot img{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .5s}
+  .shot img{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .5s,transform .6s cubic-bezier(.22,1,.36,1)}
   .shot img.loaded{opacity:1;mix-blend-mode:multiply}
+  .shot:hover img.loaded{transform:scale(1.035)}
   .shot .ph{display:none;position:absolute;inset:0;flex-direction:column;align-items:center;justify-content:center;gap:10px;
     background:linear-gradient(160deg,#f2f3f6,#e6e8ed);color:var(--gray-lt)}
   .shot.noimg .imgwrap::before{display:none}
@@ -270,25 +302,58 @@ window.addEventListener('load', function(){
   .fps-note{margin-top:4px;font-size:14px;color:var(--gray-lt)}
   .meter{height:6px;background:#2a2a2e;border-radius:999px;margin-top:28px;overflow:hidden}
   .meter i{display:block;height:100%;width:0;background:var(--blue-dk);border-radius:999px;transition:width .7s cubic-bezier(.22,1,.36,1)}
+  .fps-cmp{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:20px}
+  .cmp{display:inline-flex;align-items:center;gap:7px;background:#1a1a1e;border:1px solid #2a2a2e;
+    border-radius:999px;padding:7px 14px;font-size:12.5px;color:#a1a1a6}
+  .cmp b{color:#f5f5f7;font-variant-numeric:tabular-nums}
+  .cdot{width:8px;height:8px;border-radius:50%;display:inline-block}
   .fps-fn{margin-top:22px;font-size:12px;color:var(--gray-lt)}
 
-  /* ---------- Lighting section ---------- */
+  /* ---------- Lighting — ambient glow (photo stays natural) ---------- */
   .lchips{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:44px}
-  .lchip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 18px;
-    font:500 13px 'Hanken Grotesk';color:var(--ink-2);cursor:pointer;transition:all .2s}
+  .lchip{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:#fff;border-radius:999px;
+    padding:9px 18px;font:500 13px 'Hanken Grotesk';color:var(--ink-2);cursor:pointer;transition:all .2s}
   .lchip:hover{border-color:#b9bdc4;color:var(--ink)}
   .lchip.on{background:#1d1d1f;border-color:#1d1d1f;color:#fff;font-weight:600}
-  .fan-stage{margin:44px auto 0;width:min(360px,76vw)}
-  .fan-stage svg{width:100%;height:auto;display:block}
-  #fanSvg .lit{transition:opacity .5s, filter .5s}
-  body.light-rainbow #fanSvg .lit{animation:hueRot 6s linear infinite}
-  body.light-wave #fanSvg .lit{animation:hueRot 14s linear infinite, breathe 2.6s ease-in-out infinite}
-  body.light-pulse #fanSvg .lit{animation:breathe 1.7s ease-in-out infinite}
-  body.light-ice #fanSvg .lit{filter:hue-rotate(165deg) saturate(.85)}
-  body.light-off #fanSvg .lit{opacity:0}
-  @keyframes breathe{50%{opacity:.4}}
+  .ldot{width:14px;height:14px;border-radius:50%;flex:none;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
+  .ldot.rainbow{background:conic-gradient(#f87171,#fbbf24,#34d399,#22d3ee,#818cf8,#e879f9,#f87171)}
+  .ldot.wave{background:linear-gradient(120deg,#22d3ee,#6366f1)}
+  .ldot.pulse{background:#a78bfa}
+  .ldot.ice{background:#7dd3fc}
+  .ldot.off{background:#e5e7eb}
+  .fan-stage{position:relative;margin:52px auto 0;width:min(420px,80vw)}
+  .fan-glow{position:absolute;inset:-14%;z-index:0;border-radius:50%;filter:blur(52px);
+    opacity:.55;pointer-events:none;transition:opacity .6s,background .6s}
+  body.light-rainbow .fan-glow{background:conic-gradient(#f87171,#fbbf24,#34d399,#22d3ee,#818cf8,#e879f9,#f87171);
+    animation:glowSpin 9s linear infinite}
+  body.light-wave .fan-glow{background:linear-gradient(120deg,#22d3ee,#6366f1,#22d3ee);
+    background-size:200% 200%;animation:glowShift 6s ease-in-out infinite alternate}
+  body.light-pulse .fan-glow{background:#a78bfa;animation:breatheGlow 1.9s ease-in-out infinite}
+  body.light-ice .fan-glow{background:#38bdf8;opacity:.5}
+  body.light-off .fan-glow{background:#d7d9de;opacity:.18}
+  @keyframes glowSpin{to{transform:rotate(360deg)}}
+  @keyframes glowShift{to{background-position:100% 100%}}
+  @keyframes breatheGlow{50%{opacity:.22}}
+  .fan-frame{position:relative;z-index:1;border-radius:28px;overflow:hidden;background:#fff;
+    box-shadow:0 24px 60px -18px rgba(30,30,40,.28)}
+  .fan-frame img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block}
+  .fan-ph{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+    aspect-ratio:1/1;border-radius:28px;background:linear-gradient(160deg,#f2f3f6,#e6e8ed);color:var(--gray-lt)}
+  .fan-ph svg{opacity:.65}
+  .fan-ph b{font-size:12.5px}.fan-ph small{font-size:11px;color:#a8adb5}
+  .fan-cap{margin-top:24px;font-size:13px;color:var(--gray-lt)}
 
-  /* Price */
+  /* ---------- Lifestyle banner ---------- */
+  .banner-sec{position:relative;min-height:480px;display:flex;align-items:center;justify-content:center;
+    overflow:hidden;text-align:center;color:#fff}
+  .banner-sec img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .6s}
+  .banner-sec img.loaded{opacity:1}
+  .banner-sec::after{content:'';position:absolute;inset:0;background:linear-gradient(rgba(10,10,14,.45),rgba(10,10,14,.62))}
+  .banner-inner{position:relative;z-index:2;padding:80px 22px;max-width:640px}
+  .banner-inner h2{font-size:clamp(32px,5vw,52px);font-weight:800;letter-spacing:-.03em;line-height:1.08}
+  .banner-inner p{margin-top:16px;font-size:17px;color:#d9d9de}
+
+  /* ---------- Price ---------- */
   .price-sec{background:var(--bg-gray)}
   .price-big{margin:56px auto 8px;font-size:clamp(76px,17vw,150px);font-weight:800;letter-spacing:-.05em;line-height:1}
   .price-was{font-size:15px;color:var(--gray)}
@@ -353,29 +418,62 @@ window.addEventListener('load', function(){
   .faq details[open] .plus{transform:rotate(45deg)}
   .faq details p{padding:0 4px 20px;color:var(--ink-2);font-size:14.5px;line-height:1.65;max-width:600px}
 
+  /* ---------- Support cards ---------- */
+  .ag-grid{max-width:980px;margin:64px auto 0;display:grid;grid-template-columns:repeat(4,1fr);gap:18px;text-align:left}
+  .acard{background:var(--bg-gray);border-radius:18px;padding:24px}
+  .acard svg{color:var(--ink);margin-bottom:14px}
+  .acard h4{font-size:14.5px;font-weight:700;margin-bottom:5px}
+  .acard p{font-size:13px;color:var(--ink-2);line-height:1.5}
+
+  /* ---------- CTA band ---------- */
+  .cta-band{background:#000;color:#f5f5f7;text-align:center;padding:110px 22px}
+  .cta-band h2{font-size:clamp(32px,5vw,54px);font-weight:800;letter-spacing:-.03em}
+  .cta-band p{margin:16px auto 34px;font-size:17px;color:#a1a1a6;max-width:480px;line-height:1.55}
+  .cta-band .pill{font-size:16px;padding:13px 32px}
+
   /* Footnotes + footer */
   .footnotes{padding:70px 22px 40px;max-width:820px;margin:0 auto}
   .footnotes h3{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:14px}
   .footnotes ol{padding-left:18px}
   .footnotes li{font-size:12px;color:var(--gray-lt);line-height:1.7;margin-bottom:6px}
-  footer{background:var(--bg-gray);border-top:1px solid var(--line);padding:36px 22px 48px}
+  footer{background:var(--bg-gray);border-top:1px solid var(--line);padding:48px 22px 44px}
   .foot-inner{max-width:980px;margin:0 auto}
-  .foot-brand{font-weight:800;font-size:15px;color:var(--ink);letter-spacing:-.02em;margin-bottom:14px}
-  .foot-legal{font-size:12px;color:var(--gray-lt);line-height:1.7;max-width:640px}
-  .foot-bottom{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:26px;padding-top:18px;
-    border-top:1px solid var(--line);font-size:12px;color:var(--gray-lt)}
+  .foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:32px;padding-bottom:36px}
+  .foot-brand{font-weight:800;font-size:15px;color:var(--ink);letter-spacing:-.02em;margin-bottom:10px}
+  .foot-tag{font-size:13px;color:var(--gray);line-height:1.6;max-width:260px}
+  .foot-grid h4{font-size:12px;font-weight:700;color:var(--ink);margin-bottom:12px}
+  .foot-grid a,.foot-grid button{display:block;background:none;border:none;padding:0;text-align:left;
+    font:400 13px 'Hanken Grotesk';color:var(--gray);margin-bottom:9px;cursor:pointer;transition:color .2s}
+  .foot-grid a:hover,.foot-grid button:hover{color:var(--ink)}
+  .foot-legal{font-size:12px;color:var(--gray-lt);line-height:1.7;padding:22px 0;border-top:1px solid var(--line)}
+  .foot-bottom{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-top:16px;
+    font-size:12px;color:var(--gray-lt)}
   .foot-bottom a{color:var(--gray);margin-right:18px}
   .foot-bottom a:hover{color:var(--ink)}
 
   /* ---------- Toast ---------- */
-  .toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,16px);z-index:100;
+  .toast{position:fixed;left:50%;bottom:88px;transform:translate(-50%,16px);z-index:120;
     background:#1d1d1f;color:#f5f5f7;font-size:14px;padding:13px 22px;border-radius:999px;
     box-shadow:0 10px 34px rgba(0,0,0,.28);opacity:0;pointer-events:none;
     transition:opacity .35s,transform .35s cubic-bezier(.22,1,.36,1);max-width:88vw;text-align:center}
   .toast.show{opacity:1;transform:translate(-50%,0)}
 
+  /* ---------- Sticky buy bar ---------- */
+  .buybar{position:fixed;left:0;right:0;bottom:0;z-index:70;
+    background:rgba(255,255,255,.86);backdrop-filter:saturate(1.8) blur(18px);-webkit-backdrop-filter:saturate(1.8) blur(18px);
+    border-top:1px solid var(--line);transform:translateY(100%);transition:transform .35s cubic-bezier(.22,1,.36,1)}
+  .buybar.show{transform:none}
+  .bb-inner{max-width:980px;margin:0 auto;display:flex;align-items:center;gap:14px;padding:10px 22px}
+  .bb-thumb{width:42px;height:42px;border-radius:10px;overflow:hidden;flex:none;background:var(--bg-gray)}
+  .bb-thumb img{width:100%;height:100%;object-fit:cover;display:block;mix-blend-mode:multiply}
+  .bb-info{line-height:1.25}
+  .bb-info strong{font-size:14px;display:block}
+  .bb-info span{font-size:12px;color:var(--gray)}
+  .bb-price{margin-left:auto;font-size:15px;font-weight:700}
+  .buybar .pill{flex:none}
+
   /* ---------- Back to top ---------- */
-  .to-top{position:fixed;right:22px;bottom:22px;z-index:80;width:44px;height:44px;border-radius:50%;
+  .to-top{position:fixed;right:22px;bottom:86px;z-index:65;width:44px;height:44px;border-radius:50%;
     border:none;background:rgba(29,29,31,.85);color:#fff;cursor:pointer;display:grid;place-items:center;
     opacity:0;pointer-events:none;transform:translateY(8px);transition:.3s;box-shadow:0 8px 24px rgba(0,0,0,.25)}
   .to-top.show{opacity:1;pointer-events:auto;transform:none}
@@ -419,6 +517,7 @@ window.addEventListener('load', function(){
   .m-cta.loading::after{content:'';display:inline-block;width:13px;height:13px;margin-left:9px;
     vertical-align:-2px;border:2px solid rgba(255,255,255,.45);border-top-color:#fff;border-radius:50%;
     animation:spin 1s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
   .m-link{display:block;margin:12px auto 0;background:none;border:none;color:var(--blue);
     font:500 13px 'Hanken Grotesk';cursor:pointer}
   .m-link:hover{text-decoration:underline}
@@ -462,11 +561,15 @@ window.addEventListener('load', function(){
   .lb-nav:hover{background:rgba(255,255,255,.22)}
   .lb-prev{left:18px}.lb-next{right:18px}
 
-  /* Reveal */
   .reveal{opacity:0;transform:translateY(26px);transition:opacity .9s cubic-bezier(.22,1,.36,1),transform .9s cubic-bezier(.22,1,.36,1);transition-delay:var(--d,0s)}
   .reveal.in{opacity:1;transform:none}
 
-  /* Responsive */
+  @media (max-width:900px){
+    .fgrid{grid-template-columns:repeat(2,1fr)}
+    .ag-grid{grid-template-columns:repeat(2,1fr)}
+    .gallery{grid-template-columns:repeat(2,1fr)}
+    .foot-grid{grid-template-columns:1fr 1fr}
+  }
   @media (max-width:760px){
     .topnav a:not(.brand){display:none}
     .topnav .js-buy{display:none}
@@ -477,7 +580,11 @@ window.addEventListener('load', function(){
     .spec-row{grid-template-columns:1fr;gap:3px}
     .nav-inner{gap:16px}
     .rev-grid{grid-template-columns:1fr}
+    .fgrid{grid-template-columns:1fr}
+    .ag-grid{grid-template-columns:1fr}
+    .gallery{grid-template-columns:1fr}
     .cu{min-width:44px}
+    .bb-info span{display:none}
   }
   @media (prefers-reduced-motion:reduce){
     *,*::before,*::after{animation-duration:.01ms !important;transition:none !important}
@@ -487,16 +594,16 @@ window.addEventListener('load', function(){
 </head>
 <body id="top" class="phase-soon light-rainbow">
 
-<!-- ============ PROMO BANNER ============ -->
+<div class="progress" id="progress" aria-hidden="true"></div>
+
 <div class="promo">
   <span id="promoText">FX-300. Launching soon.</span><button class="pbtn" id="promoBtn">Notify me ›</button>
 </div>
 
-<!-- ============ TOP NAV ============ -->
 <nav class="topnav">
   <div class="nav-inner">
     <a class="brand" href="#top">Frugal</a>
-    <a href="#performance">Performance</a>
+    <a href="#overview">Overview</a>
     <a href="#graphics">Graphics</a>
     <a href="#design">Design</a>
     <a href="#price">Price</a>
@@ -517,9 +624,11 @@ window.addEventListener('load', function(){
 </nav>
 
 <div class="mobile-menu" id="mobileMenu">
+  <a href="#overview">Overview</a>
+  <a href="#design">Design</a>
   <a href="#performance">Performance</a>
   <a href="#graphics">Graphics</a>
-  <a href="#design">Design</a>
+  <a href="#lighting">Lighting</a>
   <a href="#price">Price</a>
   <a href="#compare">Compare</a>
   <a href="#specs">Tech Specs</a>
@@ -527,15 +636,15 @@ window.addEventListener('load', function(){
   <a href="#" class="js-support">Support</a>
 </div>
 
-<!-- ============ PRODUCT SUBNAV ============ -->
 <div class="subnav">
   <div class="nav-inner">
     <span class="sub-brand">FX-300</span>
     <nav class="sub-links">
       <a href="#top">Overview</a>
+      <a href="#design">Design</a>
       <a href="#performance">Performance</a>
       <a href="#graphics">Graphics</a>
-      <a href="#design">Design</a>
+      <a href="#lighting">Lighting</a>
       <a href="#price">Price</a>
       <a href="#reviews">Reviews</a>
       <a href="#compare">Compare</a>
@@ -563,13 +672,18 @@ window.addEventListener('load', function(){
       <div class="csep" aria-hidden="true">:</div>
       <div class="cu"><b id="cdS">--</b><span>Seconds</span></div>
     </div>
+    <div class="reserve">
+      <div class="r-head"><span>First run · 500 units</span><b id="rPct">4%</b></div>
+      <div class="r-track"><i id="rBar"></i></div>
+      <p class="r-note">Units are fulfilled in order of reservation.</p>
+    </div>
     <button class="cal-btn" id="calBtn">Add to calendar ↓</button>
   </div>
 
   <div class="soldout-block">
     <span class="so-badge">Sold Out</span>
     <p class="so-line">Every unit of the first run has been claimed.</p>
-    <p class="so-sub">Restock timing has not been announced.<sup class="fn"><a href="#footnotes">6</a></sup></p>
+    <p class="so-sub">Join the notify list to hear about the next run first.<sup class="fn"><a href="#footnotes">6</a></sup></p>
   </div>
 
   <div class="hero-cta reveal" style="--d:.2s">
@@ -592,7 +706,6 @@ window.addEventListener('load', function(){
              data-fb="pc-hero.png|pc-hero.jpeg|pc-hero.webp"
              onload="imgOk(this)" onerror="imgFail(this)">
         <span class="so-stamp">Sold Out</span>
-        <!-- Fallback render, shown only if no photo is found -->
         <svg class="pc-fb" viewBox="0 0 360 460" role="img" aria-label="Frugal FX-300 render">
           <defs>
             <linearGradient id="caseG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fdfdfe"/><stop offset="1" stop-color="#eef0f4"/></linearGradient>
@@ -615,23 +728,10 @@ window.addEventListener('load', function(){
           <rect x="14" y="12" width="332" height="414" rx="18" fill="url(#caseG)" stroke="#d9dde3" stroke-width="2"/>
           <rect x="30" y="28" width="300" height="382" rx="12" fill="#f2f3f6"/>
           <rect x="30" y="28" width="300" height="382" rx="12" fill="url(#meshPat)" opacity=".85"/>
-          <g transform="translate(180,92)">
-            <circle class="b14 hue" r="46" fill="url(#fanGlow)"/>
-            <circle class="b6 hue" r="40" fill="none" stroke="url(#rgbGradA)" stroke-width="5"/>
-            <circle r="40" fill="none" stroke="#d0d5dd" stroke-width="1.5" opacity=".6"/>
-          </g>
-          <g transform="translate(180,219)">
-            <circle class="b14 hue" r="46" fill="url(#fanGlow)"/>
-            <circle class="b6 hue" r="40" fill="none" stroke="url(#rgbGradA)" stroke-width="5"/>
-            <circle r="40" fill="none" stroke="#d0d5dd" stroke-width="1.5" opacity=".6"/>
-          </g>
-          <g transform="translate(180,346)">
-            <circle class="b14 hue" r="46" fill="url(#fanGlow)"/>
-            <circle class="b6 hue" r="40" fill="none" stroke="url(#rgbGradA)" stroke-width="5"/>
-            <circle r="40" fill="none" stroke="#d0d5dd" stroke-width="1.5" opacity=".6"/>
-          </g>
+          <g transform="translate(180,92)"><circle r="46" fill="url(#fanGlow)" opacity=".9" class="hue"/><circle r="40" fill="none" stroke="url(#rgbGradA)" stroke-width="5" class="hue"/></g>
+          <g transform="translate(180,219)"><circle r="46" fill="url(#fanGlow)" opacity=".9" class="hue"/><circle r="40" fill="none" stroke="url(#rgbGradA)" stroke-width="5" class="hue"/></g>
+          <g transform="translate(180,346)"><circle r="46" fill="url(#fanGlow)" opacity=".9" class="hue"/><circle r="40" fill="none" stroke="url(#rgbGradA)" stroke-width="5" class="hue"/></g>
           <circle cx="312" cy="38" r="6" fill="#e4e7ec" stroke="#cfd4db" stroke-width="1.5"/>
-          <text x="180" y="448" text-anchor="middle" style="font:600 11px 'Hanken Grotesk'" fill="#8b8f98" letter-spacing=".5em">FRUGAL</text>
         </svg>
       </div>
     </div>
@@ -639,18 +739,60 @@ window.addEventListener('load', function(){
   </div>
 </header>
 
-<!-- ============ STATEMENT ============ -->
+<!-- ============ STATEMENT + SPEC CHIPS ============ -->
 <section class="statement">
   <h2 class="reveal">Full-size performance.<br><span class="dim">Fraction of the price.</span></h2>
+  <div class="spechips reveal" style="--d:.12s;margin-top:36px">
+    <span>Ryzen 5 5500</span><span>GTX 1660 Super</span><span>16GB DDR4</span>
+    <span>512GB NVMe</span><span>4 × ARGB Fans</span><span>Windows 11</span>
+  </div>
 </section>
 
-<!-- ============ DESIGN GALLERY ============ -->
-<section id="design" class="section">
+<!-- ============ FEATURE GRID ============ -->
+<section id="overview" class="section" style="padding-top:0">
+  <p class="eyebrow reveal">Why FX-300</p>
+  <h2 class="section-h reveal" style="--d:.06s">Everything you need.<br>Nothing you don't.</h2>
+  <div class="fgrid">
+    <div class="fcard reveal" style="--d:.1s">
+      <div class="fico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></svg></div>
+      <h4>Ryzen 5 5500</h4>
+      <p>Six cores, twelve threads, boost up to 4.2GHz. Modern multi-threaded performance at the heart of the system.</p>
+    </div>
+    <div class="fcard reveal" style="--d:.16s">
+      <div class="fico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="2.5"/><circle cx="8" cy="12" r="2.4"/><circle cx="16" cy="12" r="2.4"/></svg></div>
+      <h4>GTX 1660 Super</h4>
+      <p>6GB of GDDR5 with a quiet dual-fan cooler. Proven, dependable 1080p gaming in a clean white shroud.</p>
+    </div>
+    <div class="fcard reveal" style="--d:.22s">
+      <div class="fico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="4" y="7" width="4" height="10" rx="1"/><rect x="10" y="7" width="4" height="10" rx="1"/><path d="M16 12h4M18 10v4" stroke-linecap="round"/></svg></div>
+      <h4>16GB dual-channel</h4>
+      <p>Two 8GB DDR4-3200 modules with ARGB light bars — smooth multitasking and stable frame pacing.</p>
+    </div>
+    <div class="fcard reveal" style="--d:.28s">
+      <div class="fico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="2"/><path d="M9 3v4M15 3v4M9 17v4M15 17v4M3 9h4M3 15h4M17 9h4M17 15h4" opacity=".55"/></svg></div>
+      <h4>512GB NVMe</h4>
+      <p>Up to 3,500 MB/s sequential reads. Boots in seconds, loads levels in less — with a free M.2 slot to grow.</p>
+    </div>
+    <div class="fcard reveal" style="--d:.34s">
+      <div class="fico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3.4M12 18.1v3.4M2.5 12h3.4M18.1 12h3.4M5.3 5.3l2.4 2.4M16.3 16.3l2.4 2.4M18.7 5.3l-2.4 2.4M7.7 16.3l-2.4 2.4"/></svg></div>
+      <h4>ARGB, included</h4>
+      <p>Four 120mm ARGB fans and lit memory, standard. Five lighting modes from a button on the case — no software.</p>
+    </div>
+    <div class="fcard reveal" style="--d:.4s">
+      <div class="fico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M8.5 10.5l2 2 4-4.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <h4>Windows 11 Home</h4>
+      <p>Preinstalled, fully activated, and completely clean. No trial software, no clutter — your desktop from minute one.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DESIGN GALLERY (3 images) ============ -->
+<section id="design" class="section" style="padding-top:60px">
   <p class="eyebrow reveal">Design</p>
   <h2 class="section-h reveal" style="--d:.06s">Ceramic White.<br>Built to be seen.</h2>
   <p class="section-p reveal" style="--d:.12s">A high-airflow mesh front, a tempered-glass side panel, and addressable RGB lighting — standard on every unit. Select any photo to enlarge.</p>
   <div class="gallery reveal" style="--d:.18s" id="gallery">
-    <figure class="shot">
+    <figure class="shot" tabindex="0" role="button" aria-label="Enlarge photo: front intake array">
       <div class="imgwrap">
         <img data-src="pc-front.jpg" alt="FX-300 front intake array" data-fb="pc-front.png|pc-front.jpeg|pc-front.webp"
              loading="lazy" decoding="async" onload="imgOk(this)" onerror="imgFail(this)">
@@ -661,7 +803,7 @@ window.addEventListener('load', function(){
       </div>
       <figcaption>High-airflow mesh front with three ARGB intakes.</figcaption>
     </figure>
-    <figure class="shot">
+    <figure class="shot" tabindex="0" role="button" aria-label="Enlarge photo: tempered-glass side panel">
       <div class="imgwrap">
         <img data-src="pc-side.jpg" alt="FX-300 tempered-glass side panel" data-fb="pc-side.png|pc-side.jpeg|pc-side.webp"
              loading="lazy" decoding="async" onload="imgOk(this)" onerror="imgFail(this)">
@@ -672,7 +814,7 @@ window.addEventListener('load', function(){
       </div>
       <figcaption>Tempered glass. Cable-managed internals.</figcaption>
     </figure>
-    <figure class="shot">
+    <figure class="shot" tabindex="0" role="button" aria-label="Enlarge photo: ARGB fan">
       <div class="imgwrap">
         <img data-src="pc-fan.jpg" alt="FX-300 ARGB cooling fan" data-fb="pc-fan.png|pc-fan.jpeg|pc-fan.webp"
              loading="lazy" decoding="async" onload="imgOk(this)" onerror="imgFail(this)">
@@ -682,17 +824,6 @@ window.addEventListener('load', function(){
         </div>
       </div>
       <figcaption>120mm ARGB cooling fans, tuned for quiet operation.</figcaption>
-    </figure>
-    <figure class="shot">
-      <div class="imgwrap">
-        <img data-src="pc-desk.jpg" alt="FX-300 in a desk setup" data-fb="pc-desk.png|pc-desk.jpeg|pc-desk.webp"
-             loading="lazy" decoding="async" onload="imgOk(this)" onerror="imgFail(this)">
-        <div class="ph" aria-hidden="true">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 17h18M5 17V7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10"/><rect x="10" y="17" width="4" height="3"/></svg>
-          <b>Image coming soon</b><small>pc-desk.jpg</small>
-        </div>
-      </div>
-      <figcaption>The FX-300, at home.</figcaption>
     </figure>
   </div>
 </section>
@@ -727,7 +858,7 @@ window.addEventListener('load', function(){
 <section id="graphics" class="section dark">
   <p class="eyebrow reveal">Graphics</p>
   <h2 class="section-h reveal" style="--d:.06s">GTX 1660 Super.<br>Proven 1080p performance.</h2>
-  <p class="section-p reveal" style="--d:.12s">6GB of GDDR5 and a quiet dual-fan cooler in a clean white shroud. Paired with a 6-core CPU and an NVMe drive, it delivers dependable high-frame-rate 1080p gaming — with driver support that keeps improving.</p>
+  <p class="section-p reveal" style="--d:.12s">6GB of GDDR5 and a quiet dual-fan cooler in a clean white shroud. Paired with a 6-core CPU and an NVMe drive, it delivers dependable high-frame-rate 1080p gaming.</p>
 
   <div class="fps reveal" style="--d:.18s">
     <div class="seg" id="fpsTabs" role="tablist" aria-label="Choose a game"></div>
@@ -735,80 +866,50 @@ window.addEventListener('load', function(){
     <div class="fps-meta" id="fpsMeta"></div>
     <div class="fps-note" id="fpsNote"></div>
     <div class="meter"><i id="fpsBar"></i></div>
-    <p class="fps-fn">Measured at 1080p on our standard test bench. Results may vary with drivers and system configuration.</p>
+    <div class="fps-cmp">
+      <span class="cmp"><i class="cdot" style="background:#8e8e93" aria-hidden="true"></i>Console <b id="cmpConsole">60</b> FPS</span>
+      <span class="cmp"><i class="cdot" style="background:#c7c7cc" aria-hidden="true"></i>$1,299 prebuilt <b id="cmpPre">85</b> FPS</span>
+    </div>
+    <p class="fps-fn">All figures measured at 1080p on the same test bench. Results may vary with drivers and system configuration.</p>
   </div>
 </section>
 
-<!-- ============ LIGHTING ============ -->
+<!-- ============ LIGHTING — ambient glow ============ -->
 <section id="lighting" class="section">
   <p class="eyebrow reveal">Cooling &amp; Lighting</p>
-  <h2 class="section-h reveal" style="--d:.06s">Lighting you control.</h2>
-  <p class="section-p reveal" style="--d:.12s">Three 120mm ARGB intakes draw cool air across the components; a rear exhaust and a 120mm ARGB CPU cooler carry heat out. Idle acoustics measure around 31 dB.<sup class="fn"><a href="#footnotes">4</a></sup></p>
+  <h2 class="section-h reveal" style="--d:.06s">Five modes.<br>One button.</h2>
+  <p class="section-p reveal" style="--d:.12s">Three 120mm ARGB intakes draw cool air across the components; a rear exhaust and a 120mm ARGB CPU cooler carry heat out — at around 31 dB idle.<sup class="fn"><a href="#footnotes">4</a></sup> The LED button on top of the case cycles the modes. Preview them here:</p>
 
   <div class="lchips reveal" style="--d:.16s" role="group" aria-label="Lighting mode">
-    <button class="lchip" data-mode="rainbow">Rainbow</button>
-    <button class="lchip" data-mode="wave">Wave</button>
-    <button class="lchip" data-mode="pulse">Pulse</button>
-    <button class="lchip" data-mode="ice">Ice</button>
-    <button class="lchip" data-mode="off">Off</button>
+    <button class="lchip" data-mode="rainbow"><span class="ldot rainbow" aria-hidden="true"></span>Rainbow</button>
+    <button class="lchip" data-mode="wave"><span class="ldot wave" aria-hidden="true"></span>Aurora</button>
+    <button class="lchip" data-mode="pulse"><span class="ldot pulse" aria-hidden="true"></span>Pulse</button>
+    <button class="lchip" data-mode="ice"><span class="ldot ice" aria-hidden="true"></span>Ice</button>
+    <button class="lchip" data-mode="off"><span class="ldot off" aria-hidden="true"></span>Off</button>
   </div>
 
   <div class="fan-stage reveal" style="--d:.22s">
-    <svg id="fanSvg" viewBox="0 0 440 440" role="img" aria-label="One FX-300 ARGB fan showing the selected lighting mode">
-      <defs>
-        <radialGradient id="depth" cx="50%" cy="46%" r="62%">
-          <stop offset="0" stop-color="#1b1e26"/><stop offset=".72" stop-color="#101218"/><stop offset="1" stop-color="#08090c"/>
-        </radialGradient>
-        <radialGradient id="rim" cx="50%" cy="50%" r="50%">
-          <stop offset="0" stop-color="#000" stop-opacity="0"/><stop offset=".78" stop-color="#000" stop-opacity="0"/>
-          <stop offset="1" stop-color="#000" stop-opacity=".55"/>
-        </radialGradient>
-        <linearGradient id="bladeG" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stop-color="#ffffff"/><stop offset=".55" stop-color="#eef0f4"/><stop offset="1" stop-color="#cfd4dc"/>
-        </linearGradient>
-        <radialGradient id="hubG" cx="50%" cy="38%" r="75%">
-          <stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e5e8ed"/>
-        </radialGradient>
-        <linearGradient id="rgbGradB" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stop-color="#22d3ee"/><stop offset=".3" stop-color="#818cf8"/>
-          <stop offset=".55" stop-color="#e879f9"/><stop offset=".8" stop-color="#fb7185"/>
-          <stop offset="1" stop-color="#22d3ee"/>
-        </linearGradient>
-        <filter id="soft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="7"/></filter>
-        <clipPath id="fanClip"><circle cx="220" cy="220" r="157"/></clipPath>
-      </defs>
-      <rect x="30" y="30" width="380" height="380" rx="46" fill="#fbfcfd" stroke="#e2e5ea" stroke-width="2"/>
-      <circle cx="220" cy="220" r="158" fill="url(#depth)"/>
-      <g clip-path="url(#fanClip)">
-        <g transform="translate(220,220)">
-          <path d="M0,-50 Q-42,-92 -20,-138 Q4,-152 32,-124 Q48,-84 26,-50 Q12,-42 0,-50 Z" fill="url(#bladeG)"/>
-          <path d="M0,-50 Q-42,-92 -20,-138 Q4,-152 32,-124 Q48,-84 26,-50 Q12,-42 0,-50 Z" fill="url(#bladeG)" transform="rotate(51.4)"/>
-          <path d="M0,-50 Q-42,-92 -20,-138 Q4,-152 32,-124 Q48,-84 26,-50 Q12,-42 0,-50 Z" fill="url(#bladeG)" transform="rotate(102.9)"/>
-          <path d="M0,-50 Q-42,-92 -20,-138 Q4,-152 32,-124 Q48,-84 26,-50 Q12,-42 0,-50 Z" fill="url(#bladeG)" transform="rotate(154.3)"/>
-          <path d="M0,-50 Q-42,-92 -20,-138 Q4,-152 32,-124 Q48,-84 26,-50 Q12,-42 0,-50 Z" fill="url(#bladeG)" transform="rotate(205.7)"/>
-          <path d="M0,-50 Q-42,-92 -20,-138 Q4,-152 32,-124 Q48,-84 26,-50 Q12,-42 0,-50 Z" fill="url(#bladeG)" transform="rotate(257.1)"/>
-          <path d="M0,-50 Q-42,-92 -20,-138 Q4,-152 32,-124 Q48,-84 26,-50 Q12,-42 0,-50 Z" fill="url(#bladeG)" transform="rotate(308.6)"/>
-        </g>
-        <circle cx="220" cy="220" r="158" fill="url(#rim)"/>
-      </g>
-      <g class="lit">
-        <circle cx="220" cy="220" r="150" fill="none" stroke="url(#rgbGradB)" stroke-width="26" opacity=".32" filter="url(#soft)"/>
-        <circle cx="220" cy="220" r="150" fill="none" stroke="url(#rgbGradB)" stroke-width="7" opacity=".95"/>
-      </g>
-      <circle cx="220" cy="220" r="50" fill="url(#hubG)" stroke="#dde1e7" stroke-width="1.5"/>
-      <circle cx="220" cy="220" r="38" fill="none" stroke="#edeff3" stroke-width="2"/>
-      <text x="220" y="225" text-anchor="middle" style="font:600 9px 'Hanken Grotesk';letter-spacing:.35em" fill="#b7bcc5">FRUGAL</text>
-      <circle class="lit" cx="220" cy="220" r="8" fill="url(#rgbGradB)"/>
-      <g fill="#eef0f4" stroke="#d5d9df">
-        <circle cx="58" cy="58" r="7"/><circle cx="382" cy="58" r="7"/>
-        <circle cx="58" cy="382" r="7"/><circle cx="382" cy="382" r="7"/>
-      </g>
-      <g stroke="#c8ccd3" stroke-width="2" stroke-linecap="round">
-        <line x1="55" y1="55" x2="61" y2="61"/><line x1="379" y1="55" x2="385" y2="61"/>
-        <line x1="55" y1="379" x2="61" y2="385"/><line x1="379" y1="379" x2="385" y2="385"/>
-      </g>
-    </svg>
-    <p class="pc-caption">Five modes, controlled from the case. No additional software required.</p>
+    <div class="fan-glow" aria-hidden="true"></div>
+    <div class="fan-frame" id="fanFrame">
+      <img id="fanImg" data-src="pc-fan.jpg" alt="FX-300 ARGB fan"
+           data-fb="pc-fan.png|pc-fan.jpeg|pc-fan.webp" loading="lazy" decoding="async"
+           onload="imgOk(this)" onerror="imgFail(this)">
+    </div>
+    <div class="fan-ph" id="fanPh" hidden aria-hidden="true">
+      <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.5"/><path d="M12 3a4.2 4.2 0 0 1 0 8M21 12a4.2 4.2 0 0 1-8 0M12 21a4.2 4.2 0 0 1 0-8M3 12a4.2 4.2 0 0 1 8 0"/></svg>
+      <b>Photo slot</b><small>save as pc-fan.jpg</small>
+    </div>
+    <p class="fan-cap">Select a mode to preview the ambient lighting. The photo shows the fan as shipped.</p>
+  </div>
+</section>
+
+<!-- ============ LIFESTYLE BANNER (optional pc-desk.jpg) ============ -->
+<section class="banner-sec" id="inWild">
+  <img data-src="pc-desk.jpg" alt="The FX-300 in a desk setup" data-fb="pc-desk.png|pc-desk.jpeg|pc-desk.webp"
+       loading="lazy" decoding="async" onload="imgOk(this)" onerror="imgFail(this)">
+  <div class="banner-inner">
+    <h2 class="reveal">Made for the desk<br>you actually have.</h2>
+    <p class="reveal" style="--d:.1s">A compact mid-tower footprint, quiet acoustics, and lighting that fits the room — not the other way around.</p>
   </div>
 </section>
 
@@ -856,11 +957,7 @@ window.addEventListener('load', function(){
   <div class="rev-grid">
     <div class="rev-card reveal" style="--d:.14s">
       <div class="stars" aria-label="5 stars">
-        <svg viewBox="0 0 20 20" fill="#f56300"><path d="M10 1.6l2.5 5.1 5.6.8-4 4 .9 5.6L10 14.4l-5 2.7.9-5.6-4-4 5.6-.8z"/></svg>
-        <svg viewBox="0 0 20 20" fill="#f56300"><path d="M10 1.6l2.5 5.1 5.6.8-4 4 .9 5.6L10 14.4l-5 2.7.9-5.6-4-4 5.6-.8z"/></svg>
-        <svg viewBox="0 0 20 20" fill="#f56300"><path d="M10 1.6l2.5 5.1 5.6.8-4 4 .9 5.6L10 14.4l-5 2.7.9-5.6-4-4 5.6-.8z"/></svg>
-        <svg viewBox="0 0 20 20" fill="#f56300"><path d="M10 1.6l2.5 5.1 5.6.8-4 4 .9 5.6L10 14.4l-5 2.7.9-5.6-4-4 5.6-.8z"/></svg>
-        <svg viewBox="0 0 20 20" fill="#f56300"><path d="M10 1.6l2.5 5.1 5.6.8-4 4 .9 5.6L10 14.4l-5 2.7.9-5.6-4-4 5.6-.8z"/></svg>
+        <svg viewBox="0 0 20 20" fill="#f56300"><path d="M10 1.6l2.5 5.1 5.6.8-4 4 .9 5.6L10 14.4l-5 2.7.9-5.6-4-4 5.6-.8z"/></svg><svg viewBox="0 0 20 20" fill="#f56300"><path d="M10 1.6l2.5 5.1 5.6.8-4 4 .9 5.6L10 14.4l-5 2.7.9-5.6-4-4 5.6-.8z"/></svg><svg viewBox="0 0 20 20" fill="#f56300"><path d="M10 1.6l2.5 5.1 5.6.8-4 4 .9 5.6L10 14.4l-5 2.7.9-5.6-4-4 5.6-.8z"/></svg><svg viewBox="0 0 20 20" fill="#f56300"><path d="M10 1.6l2.5 5.1 5.6.8-4 4 .9 5.6L10 14.4l-5 2.7.9-5.6-4-4 5.6-.8z"/></svg><svg viewBox="0 0 20 20" fill="#f56300"><path d="M10 1.6l2.5 5.1 5.6.8-4 4 .9 5.6L10 14.4l-5 2.7.9-5.6-4-4 5.6-.8z"/></svg>
       </div>
       <h4>"Runs everything I throw at it"</h4>
       <p>High frame rates in every game I play, and the white build looks sharp on my desk.</p>
@@ -868,11 +965,7 @@ window.addEventListener('load', function(){
     </div>
     <div class="rev-card reveal" style="--d:.2s">
       <div class="stars" aria-label="5 stars">
-        <svg viewBox="0 0 20 20" fill="#f56300"><path d="M10 1.6l2.5 5.1 5.6.8-4 4 .9 5.6L10 14.4l-5 2.7.9-5.6-4-4 5.6-.8z"/></svg>
-        <svg viewBox="0 0 20 20" fill="#f56300"><path d="M10 1.6l2.5 5.1 5.6.8-4 4 .9 5.6L10 14.4l-5 2.7.9-5.6-4-4 5.6-.8z"/></svg>
-        <svg viewBox="0 0 20 20" fill="#f56300"><path d="M10 1.6l2.5 5.1 5.6.8-4 4 .9 5.6L10 14.4l-5 2.7.9-5.6-4-4 5.6-.8z"/></svg>
-        <svg viewBox="0 0 20 20" fill="#f56300"><path d="M10 1.6l2.5 5.1 5.6.8-4 4 .9 5.6L10 14.4l-5 2.7.9-5.6-4-4 5.6-.8z"/></svg>
-        <svg viewBox="0 0 20 20" fill="#f56300"><path d="M10 1.6l2.5 5.1 5.6.8-4 4 .9 5.6L10 14.4l-5 2.7.9-5.6-4-4 5.6-.8z"/></svg>
+        <svg viewBox="0 0 20 20" fill="#f56300"><path d="M10 1.6l2.5 5.1 5.6.8-4 4 .9 5.6L10 14.4l-5 2.7.9-5.6-4-4 5.6-.8z"/></svg><svg viewBox="0 0 20 20" fill="#f56300"><path d="M10 1.6l2.5 5.1 5.6.8-4 4 .9 5.6L10 14.4l-5 2.7.9-5.6-4-4 5.6-.8z"/></svg><svg viewBox="0 0 20 20" fill="#f56300"><path d="M10 1.6l2.5 5.1 5.6.8-4 4 .9 5.6L10 14.4l-5 2.7.9-5.6-4-4 5.6-.8z"/></svg><svg viewBox="0 0 20 20" fill="#f56300"><path d="M10 1.6l2.5 5.1 5.6.8-4 4 .9 5.6L10 14.4l-5 2.7.9-5.6-4-4 5.6-.8z"/></svg><svg viewBox="0 0 20 20" fill="#f56300"><path d="M10 1.6l2.5 5.1 5.6.8-4 4 .9 5.6L10 14.4l-5 2.7.9-5.6-4-4 5.6-.8z"/></svg>
       </div>
       <h4>"Setup took ten minutes"</h4>
       <p>One power cable and I was in. It ships fully assembled — connect your peripherals and go.</p>
@@ -880,11 +973,7 @@ window.addEventListener('load', function(){
     </div>
     <div class="rev-card reveal" style="--d:.26s">
       <div class="stars" aria-label="4 stars">
-        <svg viewBox="0 0 20 20" fill="#f56300"><path d="M10 1.6l2.5 5.1 5.6.8-4 4 .9 5.6L10 14.4l-5 2.7.9-5.6-4-4 5.6-.8z"/></svg>
-        <svg viewBox="0 0 20 20" fill="#f56300"><path d="M10 1.6l2.5 5.1 5.6.8-4 4 .9 5.6L10 14.4l-5 2.7.9-5.6-4-4 5.6-.8z"/></svg>
-        <svg viewBox="0 0 20 20" fill="#f56300"><path d="M10 1.6l2.5 5.1 5.6.8-4 4 .9 5.6L10 14.4l-5 2.7.9-5.6-4-4 5.6-.8z"/></svg>
-        <svg viewBox="0 0 20 20" fill="#f56300"><path d="M10 1.6l2.5 5.1 5.6.8-4 4 .9 5.6L10 14.4l-5 2.7.9-5.6-4-4 5.6-.8z"/></svg>
-        <svg viewBox="0 0 20 20" fill="#d9d9de"><path d="M10 1.6l2.5 5.1 5.6.8-4 4 .9 5.6L10 14.4l-5 2.7.9-5.6-4-4 5.6-.8z"/></svg>
+        <svg viewBox="0 0 20 20" fill="#f56300"><path d="M10 1.6l2.5 5.1 5.6.8-4 4 .9 5.6L10 14.4l-5 2.7.9-5.6-4-4 5.6-.8z"/></svg><svg viewBox="0 0 20 20" fill="#f56300"><path d="M10 1.6l2.5 5.1 5.6.8-4 4 .9 5.6L10 14.4l-5 2.7.9-5.6-4-4 5.6-.8z"/></svg><svg viewBox="0 0 20 20" fill="#f56300"><path d="M10 1.6l2.5 5.1 5.6.8-4 4 .9 5.6L10 14.4l-5 2.7.9-5.6-4-4 5.6-.8z"/></svg><svg viewBox="0 0 20 20" fill="#f56300"><path d="M10 1.6l2.5 5.1 5.6.8-4 4 .9 5.6L10 14.4l-5 2.7.9-5.6-4-4 5.6-.8z"/></svg><svg viewBox="0 0 20 20" fill="#d9d9de"><path d="M10 1.6l2.5 5.1 5.6.8-4 4 .9 5.6L10 14.4l-5 2.7.9-5.6-4-4 5.6-.8z"/></svg>
       </div>
       <h4>"Clean inside and out"</h4>
       <p>Cable management is tidy, the glass panel shows everything off, and the lighting is easy to control.</p>
@@ -1023,9 +1112,44 @@ window.addEventListener('load', function(){
     </details>
     <details>
       <summary>Can I turn the lighting off? <span class="plus"><svg width="14" height="14" viewBox="0 0 14 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7 1.5v11M1.5 7h11"/></svg></span></summary>
-      <p>Yes. The button on top of the case cycles through five modes — Rainbow, Wave, Pulse, Ice, and Off. No software or account required.</p>
+      <p>Yes. The button on top of the case cycles through five modes — Rainbow, Aurora, Pulse, Ice, and Off. No software or account required.</p>
     </details>
   </div>
+</section>
+
+<!-- ============ SUPPORT CARDS ============ -->
+<section class="section" style="padding-top:40px">
+  <p class="eyebrow reveal">Support</p>
+  <h2 class="section-h reveal" style="--d:.06s">Backed by us.</h2>
+  <div class="ag-grid">
+    <div class="acard reveal" style="--d:.1s">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M1.5 5.5H14v10h-12.5zM14 8.5h4l3 3v4h-7z"/><circle cx="5.8" cy="16.8" r="1.9"/><circle cx="17.3" cy="16.8" r="1.9"/></svg>
+      <h4>Free delivery</h4>
+      <p>Ships within 24 hours of your order, straight to your door.</p>
+    </div>
+    <div class="acard reveal" style="--d:.16s">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11a7 7 0 1 0 2-4.9"/><path d="M6 1.5v5h5"/></svg>
+      <h4>14-day returns</h4>
+      <p>Changed your mind? Send it back within 14 days, free of charge.</p>
+    </div>
+    <div class="acard reveal" style="--d:.22s">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M11 1.8l7.5 2.7v5.2c0 4.8-3.2 8-7.5 10.5C6.7 17.7 3.5 14.5 3.5 9.7V4.5z"/><path d="M7.8 10.8l2.3 2.3 4.1-4.6" stroke-linecap="round"/></svg>
+      <h4>1-year warranty</h4>
+      <p>Coverage on every component, honored without hassle.</p>
+    </div>
+    <div class="acard reveal" style="--d:.28s">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 4v-4A2.5 2.5 0 0 1 4 14.5z"/></svg>
+      <h4>Real support</h4>
+      <p>Email support seven days a week, with responses in hours — not days.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA BAND ============ -->
+<section class="cta-band">
+  <h2 class="reveal" id="ctaTitle">Be first in line.</h2>
+  <p class="reveal" style="--d:.08s" id="ctaSub">Limited first run. One email at launch — nothing more.</p>
+  <button class="pill js-buy reveal" style="--d:.14s">Notify Me</button>
 </section>
 
 <!-- ============ FOOTNOTES ============ -->
@@ -1034,7 +1158,7 @@ window.addEventListener('load', function(){
   <ol>
     <li>Price shown is MSRP for the FX-300 base configuration in Ceramic White. Sales tax, where applicable, is calculated at checkout.</li>
     <li>Product photography shows the FX-300 production unit. Four ARGB fans (three front intake, one rear exhaust) are included standard.</li>
-    <li>Frames per dollar measured at 1080p across an internal five-game test suite. Higher is better.</li>
+    <li>Frames per dollar and all in-game figures measured at 1080p on the same internal test bench, same settings, same drivers.</li>
     <li>Acoustics measured at idle, one meter from the unit. Typical prebuilt desktops measure 40–50 dB under the same conditions.</li>
     <li>0% APR financing available for 12 months with approved credit.</li>
     <li>First-run quantity is limited and allocated first-come, first-served. Restock timing is not guaranteed.</li>
@@ -1044,18 +1168,37 @@ window.addEventListener('load', function(){
 <!-- ============ FOOTER ============ -->
 <footer>
   <div class="foot-inner">
-    <div class="foot-brand">Frugal</div>
+    <div class="foot-grid">
+      <div>
+        <div class="foot-brand">Frugal</div>
+        <p class="foot-tag">Full-size gaming performance, priced for everyone. Designed, assembled, and supported in-house.</p>
+      </div>
+      <div>
+        <h4>Shop</h4>
+        <a href="#top">FX-300</a>
+        <a href="#compare">Compare</a>
+        <a href="#specs">Tech Specs</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <div>
+        <h4>Support</h4>
+        <a href="#" class="js-support">Contact us</a>
+        <a href="#faq">Shipping</a>
+        <a href="#faq">Returns</a>
+        <a href="#faq">Warranty</a>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <button class="js-soon">About</button>
+        <a href="#reviews">Reviews</a>
+        <a href="#" class="js-status">System status</a>
+        <a href="#top">Back to top</a>
+      </div>
+    </div>
     <p class="foot-legal">Copyright © 2025 Frugal Computing, Inc. All rights reserved. Frugal and FX-300 are trademarks of Frugal Computing, Inc. Product photography is representative; actual product may vary slightly. First-run quantity is limited; orders are fulfilled first-come, first-served.</p>
     <div class="foot-bottom">
       <span>United States</span>
-      <span>
-        <a href="#top">Overview</a>
-        <a href="#compare">Compare</a>
-        <a href="#specs">Tech Specs</a>
-        <a href="#" class="js-support">Support</a>
-        <a href="#" class="js-status">Status</a>
-        <a href="#top">Back to top</a>
-      </span>
+      <span><a href="#top">Privacy</a><a href="#top">Terms</a><a href="#footnotes">Legal</a></span>
     </div>
   </div>
 </footer>
@@ -1087,13 +1230,7 @@ window.addEventListener('load', function(){
       <p class="m-sub">Free delivery and free returns.</p>
       <div class="m-item">
         <div class="m-thumb" aria-hidden="true">
-          <img id="bagThumb" data-src="pc-hero.jpg" alt="" data-fb="pc-hero.png|pc-hero.jpeg" onload="imgOk(this)" onerror="imgFail(this)">
-          <svg viewBox="0 0 60 66" style="display:none">
-            <rect x="6" y="4" width="48" height="58" rx="7" fill="#f2f3f6" stroke="#d9dde3"/>
-            <circle cx="30" cy="17" r="8" fill="#c4b5fd" opacity=".9"/>
-            <circle cx="30" cy="33" r="8" fill="#93c5fd" opacity=".9"/>
-            <circle cx="30" cy="49" r="8" fill="#f9a8d4" opacity=".9"/>
-          </svg>
+          <img data-src="pc-hero.jpg" alt="" data-fb="pc-hero.png|pc-hero.jpeg" onload="imgOk(this)" onerror="imgFail(this)">
         </div>
         <div class="m-info">
           <strong>FX-300</strong>
@@ -1181,6 +1318,16 @@ window.addEventListener('load', function(){
   <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 13V3M3.5 7.5L8 3l4.5 4.5"/></svg>
 </button>
 
+<!-- ============ STICKY BUY BAR ============ -->
+<div class="buybar" id="buybar">
+  <div class="bb-inner">
+    <div class="bb-thumb"><img data-src="pc-hero.jpg" alt="" data-fb="" onload="imgOk(this)" onerror="this.style.display='none'"></div>
+    <div class="bb-info"><strong>FX-300</strong><span>Ceramic White</span></div>
+    <div class="bb-price" id="bbPrice">$299</div>
+    <button class="pill js-buy">Notify Me</button>
+  </div>
+</div>
+
 <script>
   const $ = id => document.getElementById(id);
 
@@ -1197,26 +1344,31 @@ window.addEventListener('load', function(){
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => toast.classList.remove('show'), 3800);
   }
-  document.querySelectorAll('.js-support').forEach(link =>
-    link.addEventListener('click', e => {
-      e.preventDefault();
-      showToast("Support: support@frugalcomputing.com · Monday–Friday, 9:00–18:00 PT.");
-    }));
-  document.querySelectorAll('.js-status').forEach(link =>
-    link.addEventListener('click', e => {
-      e.preventDefault();
-      showToast("All systems operational.");
-    }));
 
-  /* og:image with base */
+  /* Support = copy email to clipboard */
+  const SUPPORT_EMAIL = 'support@frugalcomputing.com';
+  document.querySelectorAll('.js-support').forEach(l =>
+    l.addEventListener('click', async e => {
+      e.preventDefault();
+      try{
+        await navigator.clipboard.writeText(SUPPORT_EMAIL);
+        showToast('support@frugalcomputing.com copied to clipboard.');
+      }catch(err){
+        showToast('Support: support@frugalcomputing.com · Mon–Fri, 9:00–18:00 PT.');
+      }
+    }));
+  document.querySelectorAll('.js-status').forEach(l =>
+    l.addEventListener('click', e => { e.preventDefault(); showToast("All systems operational."); }));
+  document.querySelectorAll('.js-soon').forEach(l =>
+    l.addEventListener('click', () => showToast("That page is on the way.")));
+
   (function(){
     const m = document.querySelector('meta[property="og:image"]');
     if (m) m.content = applyBase('og-image.jpg');
   })();
 
   /* =========================================================
-     LAUNCH STATE — localStorage persists the countdown; at zero
-     the site flips to SOLD OUT permanently. Test URLs:
+     LAUNCH STATE — persisted; at zero → SOLD OUT. Test URLs:
        ?soldout · ?buy · ?reset
      ========================================================= */
   const DAY = 864e5;
@@ -1240,6 +1392,7 @@ window.addEventListener('load', function(){
     return d;
   }
   const launchDate = getLaunchDate();
+  const windowMs = LAUNCH_IN_DAYS * DAY;
 
   let notified = false;
   try{ notified = localStorage.getItem(K_NOTIFY) === '1'; }catch(e){}
@@ -1258,9 +1411,8 @@ window.addEventListener('load', function(){
 
   function refreshBuyButtons(){
     document.querySelectorAll('.js-buy').forEach(b => {
-      b.classList.toggle('sold', phase === 'soldout');
       b.textContent =
-        phase === 'soldout' ? 'Sold Out' :
+        phase === 'soldout' ? 'Notify Me' :
         phase === 'onsale'  ? 'Buy' :
         (notified ? 'On the List ✓' : 'Notify Me');
     });
@@ -1271,20 +1423,30 @@ window.addEventListener('load', function(){
   function refreshStatus(){
     if (phase === 'soldout'){
       $('stockLine').className = 'stock st-out reveal in';
-      $('stockText').textContent = 'Sold out · First run complete';
+      $('stockText').textContent = 'Sold out · Next run: join the list';
       $('launchLine').textContent = 'Launched ' + fmtShort(launchDate);
-      $('promoText').textContent = 'FX-300. Sold out.';
+      $('promoText').textContent = 'FX-300. Sold out — next run announced soon.';
+      $('rPct').textContent = '100%';
+      $('rBar').style.width = '100%';
+      document.querySelector('.r-head span').textContent = 'First run · claimed';
+      $('ctaTitle').textContent = 'The first run is gone.';
+      $('ctaSub').textContent = 'Join the list to hear about the next one first.';
+      $('notifySub').textContent = 'Get first word when the next FX-300 run is announced.';
     } else if (phase === 'soon'){
       $('stockLine').className = 'stock st-soon reveal in';
       $('stockText').textContent = 'Launching ' + fmtShort(launchDate) + ' · Limited first run';
       $('launchLine').textContent = 'Launching ' + fmtLong(launchDate) + ' · ' +
         launchDate.toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit' });
       $('promoText').textContent = 'FX-300. Launching ' + fmtShort(launchDate) + '.';
+      $('ctaTitle').textContent = 'Be first in line.';
+      $('ctaSub').textContent = 'Limited first run. One email at launch — nothing more.';
       $('notifySub').textContent = 'Be first in line when the FX-300 launches on ' + fmtShort(launchDate) + '.';
     } else {
       $('stockLine').className = 'stock reveal in';
       $('stockText').textContent = 'In stock · Ships within 24 hours';
       $('promoText').textContent = 'FX-300. From $299.';
+      $('ctaTitle').textContent = 'Ready when you are.';
+      $('ctaSub').textContent = 'In stock, with free delivery and 14-day returns.';
     }
     refreshBuyButtons();
   }
@@ -1308,6 +1470,10 @@ window.addEventListener('load', function(){
       cdS.textContent = s;
       cdS.classList.remove('tick'); void cdS.offsetWidth; cdS.classList.add('tick');
     }
+    /* reservation bar: deterministic fill over the countdown window */
+    const pct = Math.min(87, Math.round(4 + (1 - diff / windowMs) * 83));
+    $('rPct').textContent = pct + '%';
+    $('rBar').style.width = pct + '%';
   }
   const clock = setInterval(tick, 1000);
   tick();
@@ -1321,7 +1487,6 @@ window.addEventListener('load', function(){
     if (announce) showToast("The first run of the FX-300 is sold out.");
   }
 
-  /* Add-to-calendar (.ics) */
   $('calBtn').addEventListener('click', () => {
     const pad = n => String(n).padStart(2,'0');
     const stamp = d => `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}T${pad(d.getHours())}${pad(d.getMinutes())}00`;
@@ -1346,7 +1511,6 @@ window.addEventListener('load', function(){
   }, { threshold: .15 });
   document.querySelectorAll('.reveal').forEach(el => revealIO.observe(el));
 
-  /* ---------- Number tween ---------- */
   function tween(from, to, dur, cb){
     const t0 = performance.now();
     (function step(t){
@@ -1357,7 +1521,7 @@ window.addEventListener('load', function(){
     })(t0);
   }
 
-  /* ---------- Hero 3D tilt ---------- */
+  /* ---------- Hero tilt ---------- */
   const stage = $('pcStage'), tilt = $('pcTilt');
   let tx = 0, ty = 0, cx = 0, cy = 0;
   stage.addEventListener('mousemove', e => {
@@ -1373,7 +1537,7 @@ window.addEventListener('load', function(){
     requestAnimationFrame(tiltLoop);
   })();
 
-  /* ---------- FPS-per-dollar bars ---------- */
+  /* ---------- FPS chart ---------- */
   const chart = $('fpd');
   new IntersectionObserver((entries, io) => {
     entries.forEach(en => {
@@ -1381,17 +1545,18 @@ window.addEventListener('load', function(){
     });
   }, { threshold: .4 }).observe(chart);
 
-  /* ---------- FPS widget ---------- */
+  /* ---------- FPS widget with cross-bench comparison ---------- */
   const GAMES = [
-    { name:'Fortnite',        fps:144, settings:'1080p · Performance Mode',      note:"High-refresh performance out of the box." },
-    { name:'Valorant',        fps:240, settings:'1080p · High',                  note:"Competitive-ready frame rates." },
-    { name:'Apex Legends',    fps:112, settings:'1080p · Medium-High',           note:"Smooth, consistent pacing." },
-    { name:'GTA V',           fps:98,  settings:'1080p · High',                  note:"Los Santos at high settings." },
-    { name:'Cyberpunk 2077',  fps:52,  settings:'1080p · Medium · FSR Quality',  note:"Upscaling keeps it playable." }
+    { name:'Fortnite',       fps:144, con:60,  pre:240, settings:'1080p · Performance Mode',     note:"High-refresh performance out of the box." },
+    { name:'Valorant',       fps:240, con:120, pre:360, settings:'1080p · High',                 note:"Competitive-ready frame rates." },
+    { name:'Apex Legends',   fps:112, con:60,  pre:190, settings:'1080p · Medium-High',          note:"Smooth, consistent pacing." },
+    { name:'GTA V',          fps:98,  con:60,  pre:165, settings:'1080p · High',                 note:"Los Santos at high settings." },
+    { name:'Cyberpunk 2077', fps:52,  con:60,  pre:85,  settings:'1080p · Medium · FSR Quality', note:"The heaviest game on the bench, honestly measured." }
   ];
   const tabs = $('fpsTabs'), fpsVal = $('fpsVal'), fpsBar = $('fpsBar'),
-        fpsMeta = $('fpsMeta'), fpsNote = $('fpsNote');
-  let fpsCur = 0;
+        fpsMeta = $('fpsMeta'), fpsNote = $('fpsNote'),
+        cmpCon = $('cmpConsole'), cmpPre = $('cmpPre');
+  let fpsCur = 0, conCur = 0, preCur = 0;
   GAMES.forEach((g, i) => {
     const b = document.createElement('button');
     b.textContent = g.name;
@@ -1405,9 +1570,16 @@ window.addEventListener('load', function(){
     fpsMeta.textContent = g.settings;
     fpsNote.textContent = g.note;
     fpsBar.style.width = Math.min(100, g.fps / 240 * 100) + '%';
-    if (animate) tween(fpsCur || 0, g.fps, 600, v => fpsVal.textContent = v);
-    else fpsVal.textContent = g.fps;
-    fpsCur = g.fps;
+    if (animate){
+      tween(fpsCur || 0, g.fps, 600, v => fpsVal.textContent = v);
+      tween(conCur || 0, g.con, 600, v => cmpCon.textContent = v);
+      tween(preCur || 0, g.pre, 600, v => cmpPre.textContent = v);
+    } else {
+      fpsVal.textContent = g.fps;
+      cmpCon.textContent = g.con;
+      cmpPre.textContent = g.pre;
+    }
+    fpsCur = g.fps; conCur = g.con; preCur = g.pre;
   }
   setGame(0, false);
   tabs.addEventListener('keydown', e => {
@@ -1421,7 +1593,7 @@ window.addEventListener('load', function(){
     btns[i].focus();
   });
 
-  /* ---------- Lighting modes ---------- */
+  /* ---------- Lighting modes (ambient glow; photo untouched) ---------- */
   const MODES = ['rainbow','wave','pulse','ice','off'];
   const LIGHT_KEY = 'fx300_light';
   let lightMode = 'rainbow';
@@ -1458,19 +1630,24 @@ window.addEventListener('load', function(){
       }
     });
   }, { rootMargin: '-45% 0px -50% 0px' });
-  ['performance','graphics','design','price','reviews','compare','specs','faq'].forEach(id => {
+  ['overview','design','performance','graphics','lighting','price','reviews','compare','specs','faq'].forEach(id => {
     const el = $(id);
     if (el) spy.observe(el);
   });
 
-  /* ---------- Back to top ---------- */
-  const toTop = $('toTop');
+  /* ---------- Scroll: progress bar + buy bar + back to top ---------- */
+  const buybar = $('buybar'), toTop = $('toTop'), progress = $('progress');
+  new IntersectionObserver(entries => {
+    entries.forEach(en => buybar.classList.toggle('show', !en.isIntersecting && en.boundingClientRect.top < 0));
+  }, { threshold: 0 }).observe($('pcStage'));
   let scrollPending = false;
   window.addEventListener('scroll', () => {
     if (scrollPending) return;
     scrollPending = true;
     requestAnimationFrame(() => {
-      toTop.classList.toggle('show', window.scrollY > 700);
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      progress.style.width = (max > 0 ? (window.scrollY / max) * 100 : 0) + '%';
+      toTop.classList.toggle('show', window.scrollY > 900);
       scrollPending = false;
     });
   }, { passive: true });
@@ -1486,7 +1663,7 @@ window.addEventListener('load', function(){
   mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
   window.addEventListener('resize', () => { if (window.innerWidth > 760) closeMenu(); });
 
-  /* ---------- Lightbox ---------- */
+  /* ---------- Lightbox (mouse + keyboard) ---------- */
   const lb = $('lightbox'), lbImg = $('lbImg'), lbCap = $('lbCap');
   const shots = [...document.querySelectorAll('#gallery .shot')];
   let lbIdx = 0;
@@ -1515,15 +1692,33 @@ window.addEventListener('load', function(){
     document.body.style.overflow = '';
     setTimeout(() => { lb.hidden = true; lbImg.src = ''; }, 250);
   }
-  shots.forEach((fig, i) => fig.addEventListener('click', () => {
-    if (fig.querySelector('img.loaded')) openLb(i);
-  }));
+  shots.forEach((fig, i) => {
+    fig.addEventListener('click', () => { if (fig.querySelector('img.loaded')) openLb(i); });
+    fig.addEventListener('keydown', e => {
+      if ((e.key === 'Enter' || e.key === ' ') && fig.querySelector('img.loaded')){
+        e.preventDefault();
+        openLb(i);
+      }
+    });
+  });
   $('lbX').addEventListener('click', closeLb);
   $('lbPrev').addEventListener('click', () => { lbIdx--; renderLb(); });
   $('lbNext').addEventListener('click', () => { lbIdx++; renderLb(); });
   lb.addEventListener('click', e => { if (e.target === lb) closeLb(); });
 
-  /* ---------- Global keys ---------- */
+  /* ---------- Focus trap for dialogs ---------- */
+  function trapTab(e, root){
+    if (e.key !== 'Tab') return;
+    const f = [...root.querySelectorAll('button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])')]
+      .filter(el => !el.disabled && el.offsetParent !== null);
+    if (!f.length) return;
+    const first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+  }
+  [lb, $('backdrop'), $('notifyBackdrop')].forEach(root =>
+    root.addEventListener('keydown', e => trapTab(e, root)));
+
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape'){
       if (!lb.hidden) return closeLb();
@@ -1537,7 +1732,7 @@ window.addEventListener('load', function(){
     }
   });
 
-  /* ================= BAG / CHECKOUT (live only in ?buy mode) ================= */
+  /* ================= BAG / CHECKOUT ================= */
   const backdrop = $('backdrop'), badge = $('bagBadge');
   const UNIT = 299;
   const money = n => '$' + n.toFixed(2);
@@ -1586,8 +1781,8 @@ window.addEventListener('load', function(){
     openModal('bag');
   }
   function buyAction(){
-    if (phase === 'soldout'){ showToast("The first run is sold out."); return; }
-    if (phase === 'soon'){ openNotify(); return; }
+    if (phase === 'soldout'){ openNotify(true); return; }
+    if (phase === 'soon'){ openNotify(false); return; }
     addToBag();
   }
   document.querySelectorAll('.js-buy').forEach(btn => btn.addEventListener('click', buyAction));
@@ -1595,7 +1790,7 @@ window.addEventListener('load', function(){
 
   $('bagBtn').addEventListener('click', () => {
     if (phase === 'soon'){ showToast("Sales open " + fmtShort(launchDate) + ". Join the notify list for a reminder."); return; }
-    if (phase === 'soldout'){ showToast("The first run is sold out."); return; }
+    if (phase === 'soldout'){ showToast("The first run is sold out. Join the list for the next one."); return; }
     if (bagQty === 0){ showToast("Your bag is empty."); return; }
     openModal('bag');
   });
@@ -1608,7 +1803,6 @@ window.addEventListener('load', function(){
   $('doneBtn').addEventListener('click', closeModal);
   backdrop.addEventListener('click', e => { if (e.target === backdrop) closeModal(); });
 
-  /* input formatters */
   $('fCard').addEventListener('input', e => {
     const d = e.target.value.replace(/\D/g, '').slice(0, 16);
     e.target.value = d.replace(/(.{4})/g, '$1 ').trim();
@@ -1670,7 +1864,9 @@ window.addEventListener('load', function(){
 
   /* ================= NOTIFY LIST ================= */
   const nBackdrop = $('notifyBackdrop');
-  function openNotify(){
+  function openNotify(restock){
+    if (restock) $('notifySub').textContent = 'Get first word when the next FX-300 run is announced.';
+    else if (phase === 'soon') $('notifySub').textContent = 'Be first in line when the FX-300 launches on ' + fmtShort(launchDate) + '.';
     nBackdrop.hidden = false;
     requestAnimationFrame(() => nBackdrop.classList.add('show'));
     document.body.style.overflow = 'hidden';
@@ -1696,7 +1892,9 @@ window.addEventListener('load', function(){
     try{ localStorage.setItem(K_NOTIFY, '1'); }catch(err){}
     refreshBuyButtons();
     closeNotify();
-    showToast("You're on the list. We'll email you at launch.");
+    showToast(phase === 'soldout'
+      ? "You're on the list for the next run."
+      : "You're on the list. We'll email you at launch.");
   });
 </script>
 </body>
