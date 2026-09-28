@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Titan Systems - FX-300</title>
+<title>Titan Systems — FX-300 — The $299 Gaming Desktop</title>
 <meta name="description" content="FX-300 by Titan Systems. AMD Ryzen (AM4), ASUS Dual White RTX 3060, 16GB T-Force Delta RGB, Montech ARGB case. Full 1080p gaming for $299.">
 <meta property="og:title" content="Titan Systems — FX-300 — The $299 Gaming Desktop">
 <meta property="og:description" content="Full 1080p gaming. $299.">
@@ -13,28 +13,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<!-- EmailJS — free email API for visitor confirmations (200 emails/month) -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
 /* =====================================================================
-   IMAGE SETUP
-   GitHub Pages: leave IMG_BASE = "" and keep images beside index.html.
-   IMPORTANT: filenames are case-sensitive on GitHub — pc-hero.jpg ≠ PC-hero.jpg
-
-   Files:
-     logo.png      brand icon — nav, footer, favicon, badge on 3rd gallery photo
-     pc-hero.jpg   required  — main product shot (older pc.jpg also accepted)
-     pc-front.jpg  gallery 1 — straight-on front view
-     pc-side.jpg   gallery 2 — glass side panel / internals
-     pc-fan.jpg    gallery 3 — ARGB fan close-up
-     pc-desk.jpg   optional  — lifestyle banner (hides if missing)
-     og-image.jpg  optional  — 1200×630 link preview
-   ===================================================================== */
-<script>
-/* =====================================================================
-   IMAGE SETUP
-   GitHub Pages: leave IMG_BASE = "" and keep images beside index.html.
-   Filenames are CASE-SENSITIVE on GitHub.
+   IMAGE SETUP — fail-safe. Listeners attach BEFORE src is set, so the
+   fallback chain can never die silently. Filenames are CASE-SENSITIVE.
    Files: logo.png · pc-hero.jpg (required) · pc-front.jpg ·
           pc-side.jpg · pc-fan.jpg · pc-desk.jpg (optional) · og-image.jpg
    ===================================================================== */
@@ -71,8 +54,6 @@ function imgFail(img){
     return;
   }
   if (img.closest('.banner-sec')){ img.closest('.banner-sec').style.display = 'none'; return; }
-  var sib = img.parentElement.querySelector('svg');
-  if (sib) sib.style.display = 'block';
 }
 function checkGallery(){
   var g = document.getElementById('gallery');
@@ -82,8 +63,6 @@ function checkGallery(){
     if (sec) sec.style.display = 'none';
   }
 }
-/* Attach load/error listeners BEFORE setting src, so the fallback
-   chain can never die silently mid-way. */
 function bindImg(im){
   if (im.dataset.bound) return;
   im.dataset.bound = '1';
@@ -116,6 +95,14 @@ window.addEventListener('load', function(){
   a{color:var(--blue);text-decoration:none}
   :focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:4px}
   img.broken{display:none}
+
+  /* Reveal: content is VISIBLE by default. The JS adds html.rv only when
+     it has started successfully — if the script ever dies, everything
+     below simply shows, no blank page possible. */
+  html.rv .reveal{opacity:0;transform:translateY(26px);
+    transition:opacity .9s cubic-bezier(.22,1,.36,1),transform .9s cubic-bezier(.22,1,.36,1);
+    transition-delay:var(--d,0s)}
+  html.rv .reveal.in{opacity:1;transform:none}
 
   .progress{position:fixed;top:0;left:0;height:3px;width:0;background:var(--blue);z-index:80;pointer-events:none}
 
@@ -500,9 +487,6 @@ window.addEventListener('load', function(){
   .m-done-line{font-size:15px;margin-top:6px}
   .m-done-sub{font-size:13px;color:var(--gray);line-height:1.55;margin:14px 0 20px}
 
-  .reveal{opacity:0;transform:translateY(26px);transition:opacity .9s cubic-bezier(.22,1,.36,1),transform .9s cubic-bezier(.22,1,.36,1);transition-delay:var(--d,0s)}
-  .reveal.in{opacity:1;transform:none}
-
   @media (max-width:900px){
     .fgrid{grid-template-columns:repeat(2,1fr)}
     .ag-grid{grid-template-columns:repeat(2,1fr)}
@@ -637,7 +621,7 @@ window.addEventListener('load', function(){
     <div class="pc-tilt" id="pcTilt">
       <div class="pc-shot">
         <img id="heroImg" data-src="pc-hero.jpg" width="640" height="480" loading="eager" decoding="async"
-             alt="Titan Systems FX-300 — Montech Air 100 ARGB in white with three ARGB intake fans, ASRock B550M Pro4, ASUS Dual White RTX 3060 and T-Force Delta RGB memory visible through the glass side panel"
+             alt="Titan Systems FX-300 — Montech Air 100 ARGB in white with ARGB intake fans, ASRock B550M Pro4, ASUS Dual White RTX 3060 and T-Force Delta RGB memory visible through the glass side panel"
              data-fb="pc-hero.png|pc-hero.jpeg|pc-hero.webp|pc.jpg">
         <span class="so-stamp">Sold Out</span>
         <svg class="pc-fb" viewBox="0 0 360 460" role="img" aria-label="Titan Systems FX-300 render">
@@ -1219,24 +1203,25 @@ window.addEventListener('load', function(){
 
 <script>
 /* ================================================================
-   CONFIG — kept readable so you can edit it. Everything below is
-   application logic.
+   CONFIG — kept readable so you can edit it.
    ================================================================ */
 var IMG_BASE = "";
-/* Owner inbox for signups and orders (FormSubmit).
-   NOTE: this is a new address — submit the Notify form once and
-   click the activation email FormSubmit sends to it (check spam). */
 var NOTIFY_EMAIL = "noreplytitansystems@gmail.com";
 var EMAILJS = {
-  publicKey: "bdfTTHLlP2cYzF5z-",                        /* ← EmailJS Account page */
-  serviceId: "service_lc3fjip",                        /* ← Email Services */
-  confirmTemplateId: "template_geepe0g",                /* ← signup confirmation template */
-  orderTemplateId: ""                   /* ← optional: order receipt template */
+  publicKey: "bdfTTHLlP2cYzF5z-",
+  serviceId: "service_lc3fjip",
+  confirmTemplateId: "template_geepe0g",
+  orderTemplateId: ""
 };
 /* ================================================================ */
 
 (function(){
 'use strict';
+/* Mark the page as script-healthy. This enables the reveal animation.
+   If ANYTHING above fails, this line never runs and all content simply
+   displays statically — a blank page is impossible. */
+document.documentElement.classList.add('rv');
+
 var $ = function(id){ return document.getElementById(id); };
 
 var EMAIL_SET = NOTIFY_EMAIL && NOTIFY_EMAIL.trim().length > 3;
@@ -1461,6 +1446,11 @@ var revealIO = new IntersectionObserver(function(entries){
   });
 }, { threshold: .15 });
 document.querySelectorAll('.reveal').forEach(function(el){ revealIO.observe(el); });
+
+/* Safety net: if anything somehow never revealed, force-show after 3s */
+setTimeout(function(){
+  document.querySelectorAll('.reveal:not(.in)').forEach(function(el){ el.classList.add('in'); });
+}, 3000);
 
 function tween(from, to, dur, cb){
   var t0 = performance.now();
