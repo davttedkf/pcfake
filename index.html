@@ -30,6 +30,14 @@
      pc-desk.jpg   optional  — lifestyle banner (hides if missing)
      og-image.jpg  optional  — 1200×630 link preview
    ===================================================================== */
+<script>
+/* =====================================================================
+   IMAGE SETUP
+   GitHub Pages: leave IMG_BASE = "" and keep images beside index.html.
+   Filenames are CASE-SENSITIVE on GitHub.
+   Files: logo.png · pc-hero.jpg (required) · pc-front.jpg ·
+          pc-side.jpg · pc-fan.jpg · pc-desk.jpg (optional) · og-image.jpg
+   ===================================================================== */
 var IMG_BASE = "";
 function applyBase(s){
   if (!s || /^(https?:|data:)/i.test(s)) return s;
@@ -41,6 +49,9 @@ function applyBase(s){
 })();
 function imgOk(img){
   img.classList.add('loaded');
+  if (img.classList.contains('brand-logo')) img.classList.add('ok');
+  var p = img.parentElement;
+  if (p && p.classList.contains('wm')){ img.classList.add('ok'); p.classList.add('ok'); }
   var w = img.parentElement;
   if (w && w.classList.contains('imgwrap')) w.classList.add('done');
 }
@@ -71,18 +82,23 @@ function checkGallery(){
     if (sec) sec.style.display = 'none';
   }
 }
+/* Attach load/error listeners BEFORE setting src, so the fallback
+   chain can never die silently mid-way. */
+function bindImg(im){
+  if (im.dataset.bound) return;
+  im.dataset.bound = '1';
+  im.addEventListener('load',  function(){ imgOk(im); });
+  im.addEventListener('error', function(){ imgFail(im); });
+  im.src = applyBase(im.dataset.src);
+}
 function mountImgs(){
-  document.querySelectorAll('img[data-src]').forEach(function(im){
-    if (im.dataset.bound) return;
-    im.dataset.bound = '1';
-    im.src = applyBase(im.dataset.src);
-  });
+  document.querySelectorAll('img[data-src]').forEach(bindImg);
 }
 document.addEventListener('DOMContentLoaded', mountImgs);
 window.addEventListener('load', function(){
   mountImgs();
-  document.querySelectorAll('img[src]').forEach(function(im){
-    if (im.complete && im.naturalWidth === 0) imgFail(im);
+  document.querySelectorAll('img[data-src]').forEach(function(im){
+    if (im.complete && im.naturalWidth === 0 && !im.classList.contains('broken')) imgFail(im);
   });
 });
 </script>
